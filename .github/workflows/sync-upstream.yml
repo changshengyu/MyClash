@@ -1,0 +1,79 @@
+name: Sync upstream and apply DIRECT rules
+
+on:
+  schedule:
+    - cron: '23 3 * * *' # 每天 UTC 03:23（北京时间 11:23）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: myclash-sync-main
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fork main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Merge upstream updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git remote add upstream https://github.com/AIsouler/MyClash.git
+          git fetch upstream main
+          # 同一处出现冲突时优先采用上游版本，随后重新添加个人规则
+          git merge --no-edit -X theirs upstream/main
+
+      - name: Apply custom DIRECT rules
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('Script/Script.js')
+          content = path.read_text(encoding='utf-8')
+          pattern = re.compile(
+              r'(?ms)^[ \t]*const[ \t]+prefixRules[ \t]*=[ \t]*\[[ \t]*\r?\n(?P<body>.*?)^[ \t]*\];'
+          )
+          matches = list(pattern.finditer(content))
+          if len(matches) != 1:
+              raise SystemExit('prefixRules 结构已变化，自动修改中止，请人工检查上游脚本。')
+
+          block = matches[0]
+          existing = set(re.findall(r'''["']([^"'\r\n]+)["']''', block.group('body')))
+          required = [
+              'DOMAIN-SUFFIX,yuchsh.top,DIRECT',
+              'DOMAIN,prts.maa.plus,DIRECT',
+          ]
+          missing = [rule for rule in required if rule not in existing]
+          if missing:
+              insert = ''.join(f"  '{rule}',\n" for rule in missing)
+              start = block.start('body')
+              content = content[:start] + insert + content[start:]
+              path.write_text(content, encoding='utf-8')
+          print('规则检查完成，新增：' + (', '.join(missing) if missing else '无（已存在）'))
+          PY
+
+      - name: Verify JavaScript syntax
+        run: node --check Script/Script.js
+
+      - name: Commit and push if changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add Script/Script.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: apply personal DIRECT rules'
+          fi
+          git push origin HEAD:main
