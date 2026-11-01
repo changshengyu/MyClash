@@ -45,6 +45,8 @@ const ruleOptionsEnable = {
 
 // 定义前置规则
 const prefixRules = [
+  'DOMAIN-SUFFIX,yuchsh.top,DIRECT',
+  'DOMAIN,prts.maa.plus,DIRECT',
   // 规则集下载域名，避免出现鸡蛋问题
   'DOMAIN,cdn.jsdmirror.com,直连',
 
