@@ -365,7 +365,8 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Google.svg`,
-    rules: ['RULE-SET,google,Google', 'RULE-SET,google_ip,Google,no-resolve'],
+    rules: ['RULE-SET,google,Google'],
+    ipRules: ['RULE-SET,google_ip,Google'],
   },
   {
     name: 'AI',
@@ -380,7 +381,12 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}OpenAI.svg`,
-    rules: ['RULE-SET,ai,AI'],
+    rules: [
+      'RULE-SET,ai,AI',
+      'DOMAIN,cdn.usefathom.com,AI',
+      'DOMAIN-SUFFIX,intercom.io,AI',
+      'DOMAIN-SUFFIX,intercomcdn.com,AI',
+    ],
   },
   {
     name: 'Telegram',
@@ -400,7 +406,8 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Telegram.svg`,
-    rules: ['RULE-SET,telegram,Telegram', 'RULE-SET,telegram_ip,Telegram,no-resolve'],
+    rules: ['RULE-SET,telegram,Telegram'],
+    ipRules: ['RULE-SET,telegram_ip,Telegram'],
   },
   {
     name: 'Steam',
@@ -421,7 +428,8 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Steam.svg`,
-    rules: ['RULE-SET,steam,Steam', 'RULE-SET,steam_ip,Steam,no-resolve'],
+    rules: ['RULE-SET,steam,Steam'],
+    ipRules: ['RULE-SET,steam_ip,Steam'],
   },
   {
     name: 'AdBlock',
@@ -737,6 +745,7 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
 
   const functionalGroups = [];
   const functionalRules = [];
+  const functionalIpRules = [];
   const finalRuleProviders = { ...baseRuleProviders };
 
   if (!blockForeignQuicEnabled) {
@@ -789,6 +798,7 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
       globalGroup,
       functionalGroups: [defaultGroup, ...(autoSelectGroupEnabled ? [autoSelectGroup] : [])],
       functionalRules: [],
+      functionalIpRules: [],
       finalRuleProviders,
       directGroup,
     };
@@ -809,6 +819,7 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
     if (!ruleOptionsEnable[svc.name]) continue;
 
     functionalRules.push(...(svc.rules || []));
+    functionalIpRules.push(...(svc.ipRules || []));
     Object.assign(finalRuleProviders, svc.providers || {});
   }
 
@@ -871,7 +882,7 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
     icon: `${iconBaseUrl}Global.svg`,
   };
 
-  return { globalGroup, functionalGroups, functionalRules, finalRuleProviders, directGroup };
+  return { globalGroup, functionalGroups, functionalRules, functionalIpRules, finalRuleProviders, directGroup };
 }
 
 // ---dns和hosts相关处理---
@@ -1383,11 +1394,8 @@ function main(config) {
 
   const generatedRegionGroups = ruleOptionsEnable.极简模式 ? [] : buildRegionGroups(filteredProxies, customProxies);
 
-  const { globalGroup, functionalGroups, functionalRules, finalRuleProviders, directGroup } = buildFunctionalGroups(
-    filteredProxies,
-    generatedRegionGroups,
-    { customProxyNames, customGroup },
-  );
+  const { globalGroup, functionalGroups, functionalRules, functionalIpRules, finalRuleProviders, directGroup } =
+    buildFunctionalGroups(filteredProxies, generatedRegionGroups, { customProxyNames, customGroup });
 
   const { dns, hosts, proxies: mappedProxies } = buildDnsAndHostsConfig(config, filteredProxies);
 
@@ -1445,9 +1453,10 @@ function main(config) {
     ...prefixRules,
     ...(ruleOptionsEnable.屏蔽国外QUIC ? blockForeignQuic : []),
     ...functionalRules,
+    'RULE-SET,geolocation-!cn,默认代理',
+    ...functionalIpRules,
 
     // 兜底规则
-    'RULE-SET,geolocation-!cn,默认代理',
     'RULE-SET,cn_ip,直连',
     'RULE-SET,private_ip,直连',
     `MATCH,${ruleOptionsEnable.极简模式 ? '默认代理' : '漏网之鱼'}`,
