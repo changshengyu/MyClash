@@ -2,7 +2,9 @@ name: Sync upstream and apply DIRECT rules
 
 on:
   schedule:
-    - cron: '23 3 * * *' # 每天 UTC 03:23（北京时间 11:23）
+    # 每天 3 次（UTC 03:23 / 11:23 / 19:23 = 北京时间 11:23 / 19:23 / 03:23）
+    # GitHub 定时任务可能延迟或丢弃，多跑几次保证当天能同步；无新内容时不会产生提交
+    - cron: '23 3,11,19 * * *'
   workflow_dispatch:
 
 permissions:
@@ -18,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout fork main
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 0
