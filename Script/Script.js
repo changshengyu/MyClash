@@ -46,6 +46,8 @@ const ruleOptionsEnable = {
 
 // 定义前置规则
 const prefixRules = [
+  'DOMAIN-SUFFIX,yuchsh.top,DIRECT',
+  'DOMAIN,prts.maa.plus,DIRECT',
   // 私有网络直连
   'RULE-SET,private,直连',
 
