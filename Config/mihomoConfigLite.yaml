@@ -353,54 +353,54 @@ US_filter:
   }
 SG_filter: &SG_filter { filter: '(?i)(🇸🇬|新加坡|狮城|(?<![A-Za-z])SGP?(?![A-Za-z])|singapore)' }
 TW_filter: &TW_filter { filter: '(?i)(🇹🇼|台湾|台北|高雄|(?<![A-Za-z])TWN?(?![A-Za-z])|taiwan)' }
-DE_filter:
-  &DE_filter {
-    filter: '(?i)(🇩🇪|德国|德國|法兰克福|法蘭克福|柏林|慕尼黑|Germany|Frankfurt|Berlin|Munich|Nuremberg|Dusseldorf|(?<![A-Za-z])(?:DE|DEU)(?![A-Za-z]))',
-  }
-NL_filter:
-  &NL_filter {
-    filter: '(?i)(🇳🇱|荷兰|荷蘭|阿姆斯特丹|鹿特丹|Netherlands|Holland|Amsterdam|Rotterdam|(?<![A-Za-z])(?:NL|NLD)(?![A-Za-z]))',
-  }
-GB_filter:
-  &GB_filter {
-    filter: '(?i)(🇬🇧|英国|英國|伦敦|倫敦|曼彻斯特|United\s*Kingdom|Great\s*Britain|Britain|England|London|Manchester|(?<![A-Za-z])(?:GB|GBR|UK)(?![A-Za-z]))',
-  }
-FR_filter:
-  &FR_filter { filter: '(?i)(🇫🇷|法国|法國|巴黎|马赛|馬賽|France|Paris|Marseille|(?<![A-Za-z])(?:FR|FRA)(?![A-Za-z]))' }
-KR_filter:
-  &KR_filter {
-    filter: '(?i)(🇰🇷|韩国|韓國|首尔|首爾|釜山|South\s*Korea|Korea|Seoul|Busan|(?<![A-Za-z])(?:KR|KOR)(?![A-Za-z]))',
-  }
-CA_filter:
-  &CA_filter {
-    filter: '(?i)(🇨🇦|加拿大|多伦多|多倫多|温哥华|溫哥華|Canada|Toronto|Vancouver|Montreal|(?<![A-Za-z])(?:CA|CAN)(?![A-Za-z]))',
-  }
-AU_filter:
-  &AU_filter {
-    filter: '(?i)(🇦🇺|澳大利亚|澳大利亞|澳洲|悉尼|墨尔本|墨爾本|Australia|Sydney|Melbourne|Brisbane|(?<![A-Za-z])(?:AU|AUS)(?![A-Za-z]))',
-  }
-CH_filter:
-  &CH_filter {
-    filter: '(?i)(🇨🇭|瑞士|苏黎世|蘇黎世|日内瓦|日內瓦|Switzerland|Zurich|Geneva|(?<![A-Za-z])(?:CH|CHE)(?![A-Za-z]))',
-  }
-SE_filter:
-  &SE_filter { filter: '(?i)(🇸🇪|瑞典|斯德哥尔摩|斯德哥爾摩|Sweden|Stockholm|(?<![A-Za-z])(?:SE|SWE)(?![A-Za-z]))' }
-FI_filter:
-  &FI_filter { filter: '(?i)(🇫🇮|芬兰|芬蘭|赫尔辛基|赫爾辛基|Finland|Helsinki|(?<![A-Za-z])(?:FI|FIN)(?![A-Za-z]))' }
-PL_filter:
-  &PL_filter { filter: '(?i)(🇵🇱|波兰|波蘭|华沙|華沙|Poland|Warsaw|Krakow|(?<![A-Za-z])(?:PL|POL)(?![A-Za-z]))' }
-IT_filter:
-  &IT_filter { filter: '(?i)(🇮🇹|意大利|罗马|羅馬|米兰|米蘭|Italy|Rome|Milan|(?<![A-Za-z])(?:IT|ITA)(?![A-Za-z]))' }
-ES_filter:
-  &ES_filter {
-    filter: '(?i)(🇪🇸|西班牙|马德里|馬德里|巴塞罗那|巴塞羅那|Spain|Madrid|Barcelona|(?<![A-Za-z])(?:ES|ESP)(?![A-Za-z]))',
-  }
-IN_filter:
-  &IN_filter {
-    filter: '(?i)(🇮🇳|印度|孟买|孟買|新德里|India|Mumbai|New\s*Delhi|Bangalore|(?<![A-Za-z])(?:IN|IND)(?![A-Za-z]))',
-  }
-NO_filter: &NO_filter { filter: '(?i)(🇳🇴|挪威|奥斯陆|奧斯陸|Norway|Oslo|(?<![A-Za-z])(?:NO|NOR)(?![A-Za-z]))' }
-IE_filter: &IE_filter { filter: '(?i)(🇮🇪|爱尔兰|愛爾蘭|都柏林|Ireland|Dublin|(?<![A-Za-z])(?:IE|IRL)(?![A-Za-z]))' }
+DE_filter: &DE_filter
+  filter: '(?i)(🇩🇪|德国|德國|法兰克福|法蘭克福|柏林|慕尼黑|Germany|Frankfurt|Berlin|Munich|Nuremberg|Dusseldorf|(?<![A-Za-z0-9])(?:DE|DEU)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+NL_filter: &NL_filter
+  filter: '(?i)(🇳🇱|荷兰|荷蘭|阿姆斯特丹|鹿特丹|Netherlands|Holland|Amsterdam|Rotterdam|(?<![A-Za-z0-9])(?:NL|NLD)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+GB_filter: &GB_filter
+  filter: '(?i)(🇬🇧|英国|英國|伦敦|倫敦|曼彻斯特|United\s*Kingdom|Great\s*Britain|Britain|England|London|Manchester|(?<![A-Za-z0-9])(?:GB|GBR|UK)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+FR_filter: &FR_filter
+  filter: '(?i)(🇫🇷|法国|法國|巴黎|马赛|馬賽|France|Paris|Marseille|(?<![A-Za-z0-9])(?:FR|FRA)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+KR_filter: &KR_filter
+  filter: '(?i)(🇰🇷|韩国|韓國|首尔|首爾|釜山|South\s*Korea|Korea|Seoul|Busan|(?<![A-Za-z0-9])(?:KR|KOR)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+CA_filter: &CA_filter
+  filter: '(?i)(🇨🇦|加拿大|多伦多|多倫多|温哥华|溫哥華|Canada|Toronto|Vancouver|Montreal|(?<![A-Za-z0-9])(?:CA|CAN)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+AU_filter: &AU_filter
+  filter: '(?i)(🇦🇺|澳大利亚|澳大利亞|澳洲|悉尼|墨尔本|墨爾本|Australia|Sydney|Melbourne|Brisbane|(?<![A-Za-z0-9])(?:AU|AUS)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+CH_filter: &CH_filter
+  filter: '(?i)(🇨🇭|瑞士|苏黎世|蘇黎世|日内瓦|日內瓦|Switzerland|Zurich|Geneva|(?<![A-Za-z0-9])(?:CH|CHE)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+SE_filter: &SE_filter
+  filter: '(?i)(🇸🇪|瑞典|斯德哥尔摩|斯德哥爾摩|Sweden|Stockholm|(?<![A-Za-z0-9])(?:SE|SWE)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+FI_filter: &FI_filter
+  filter: '(?i)(🇫🇮|芬兰|芬蘭|赫尔辛基|赫爾辛基|Finland|Helsinki|(?<![A-Za-z0-9])(?:FI|FIN)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+PL_filter: &PL_filter
+  filter: '(?i)(🇵🇱|波兰|波蘭|华沙|華沙|Poland|Warsaw|Krakow|(?<![A-Za-z0-9])(?:PL|POL)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+IT_filter: &IT_filter
+  filter: '(?i)(🇮🇹|意大利|罗马|羅馬|米兰|米蘭|Italy|Rome|Milan|(?<![A-Za-z0-9])(?:IT|ITA)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+ES_filter: &ES_filter
+  filter: '(?i)(🇪🇸|西班牙|马德里|馬德里|巴塞罗那|巴塞羅那|Spain|Madrid|Barcelona|(?<![A-Za-z0-9])(?:ES|ESP)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+IN_filter: &IN_filter
+  filter: '(?i)(🇮🇳|印度|孟买|孟買|新德里|India|Mumbai|New\s*Delhi|Bangalore|(?<![A-Za-z0-9])(?:IN|IND)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+NO_filter: &NO_filter
+  filter: '(?i)(🇳🇴|挪威|奥斯陆|奧斯陸|Norway|Oslo|(?<![A-Za-z0-9])(?:NO|NOR)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
+IE_filter: &IE_filter
+  filter: '(?i)(🇮🇪|爱尔兰|愛爾蘭|都柏林|Ireland|Dublin|(?<![A-Za-z0-9])(?:IE|IRL)(?![A-Za-z0-9]))'
+  exclude-filter: '(?i)(到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)'
 low_filter:
   &low_filter {
     filter: '(?i)(^(?!.*(?:剩|期)).*(?:(?<![\d.])0(\.[0-5]|[*×✕✖⨯⨉x倍]))|(?:[*×✕✖⨯⨉x]0)|^(?!.*(?:客户端|软件)).*下载|低倍|免费|(?<![A-Za-z])free(?![A-Za-z]))',
@@ -412,7 +412,7 @@ high_filter:
 home_filter: &home_filter { filter: '(?i)(家宽|住宅|原生\s*IP|家庭宽带|\bISP\b|\bRES\b|residential)' }
 exclude_filter:
   &exclude_filter {
-    exclude-filter: '(?i)(🇭🇰|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\s*kong|🇯🇵|日本|东京|大阪|京都|(?<![A-Za-z])JPN?(?![A-Za-z])|japan|🇺🇸|美国|纽约|洛杉矶|旧金山|芝加哥|休斯顿|迈阿密|西雅图|波士顿|华盛顿|拉斯维加斯|圣何塞|(?<![A-Za-z])USA?(?![A-Za-z])|america|united\s*states|🇸🇬|新加坡|狮城|(?<![A-Za-z])SGP?(?![A-Za-z])|singapore|🇹🇼|台湾|台北|高雄|(?<![A-Za-z])TWN?(?![A-Za-z])|taiwan|🇩🇪|德国|德國|法兰克福|法蘭克福|柏林|慕尼黑|Germany|Frankfurt|Berlin|Munich|Nuremberg|Dusseldorf|(?<![A-Za-z])(?:DE|DEU)(?![A-Za-z])|🇳🇱|荷兰|荷蘭|阿姆斯特丹|鹿特丹|Netherlands|Holland|Amsterdam|Rotterdam|(?<![A-Za-z])(?:NL|NLD)(?![A-Za-z])|🇬🇧|英国|英國|伦敦|倫敦|曼彻斯特|United\s*Kingdom|Great\s*Britain|Britain|England|London|Manchester|(?<![A-Za-z])(?:GB|GBR|UK)(?![A-Za-z])|🇫🇷|法国|法國|巴黎|马赛|馬賽|France|Paris|Marseille|(?<![A-Za-z])(?:FR|FRA)(?![A-Za-z])|🇰🇷|韩国|韓國|首尔|首爾|釜山|South\s*Korea|Korea|Seoul|Busan|(?<![A-Za-z])(?:KR|KOR)(?![A-Za-z])|🇨🇦|加拿大|多伦多|多倫多|温哥华|溫哥華|Canada|Toronto|Vancouver|Montreal|(?<![A-Za-z])(?:CA|CAN)(?![A-Za-z])|🇦🇺|澳大利亚|澳大利亞|澳洲|悉尼|墨尔本|墨爾本|Australia|Sydney|Melbourne|Brisbane|(?<![A-Za-z])(?:AU|AUS)(?![A-Za-z])|🇨🇭|瑞士|苏黎世|蘇黎世|日内瓦|日內瓦|Switzerland|Zurich|Geneva|(?<![A-Za-z])(?:CH|CHE)(?![A-Za-z])|🇸🇪|瑞典|斯德哥尔摩|斯德哥爾摩|Sweden|Stockholm|(?<![A-Za-z])(?:SE|SWE)(?![A-Za-z])|🇫🇮|芬兰|芬蘭|赫尔辛基|赫爾辛基|Finland|Helsinki|(?<![A-Za-z])(?:FI|FIN)(?![A-Za-z])|🇵🇱|波兰|波蘭|华沙|華沙|Poland|Warsaw|Krakow|(?<![A-Za-z])(?:PL|POL)(?![A-Za-z])|🇮🇹|意大利|罗马|羅馬|米兰|米蘭|Italy|Rome|Milan|(?<![A-Za-z])(?:IT|ITA)(?![A-Za-z])|🇪🇸|西班牙|马德里|馬德里|巴塞罗那|巴塞羅那|Spain|Madrid|Barcelona|(?<![A-Za-z])(?:ES|ESP)(?![A-Za-z])|🇮🇳|印度|孟买|孟買|新德里|India|Mumbai|New\s*Delhi|Bangalore|(?<![A-Za-z])(?:IN|IND)(?![A-Za-z])|🇳🇴|挪威|奥斯陆|奧斯陸|Norway|Oslo|(?<![A-Za-z])(?:NO|NOR)(?![A-Za-z])|🇮🇪|爱尔兰|愛爾蘭|都柏林|Ireland|Dublin|(?<![A-Za-z])(?:IE|IRL)(?![A-Za-z]))',
+    exclude-filter: '(?i)(🇭🇰|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\s*kong|🇯🇵|日本|东京|大阪|京都|(?<![A-Za-z])JPN?(?![A-Za-z])|japan|🇺🇸|美国|纽约|洛杉矶|旧金山|芝加哥|休斯顿|迈阿密|西雅图|波士顿|华盛顿|拉斯维加斯|圣何塞|(?<![A-Za-z])USA?(?![A-Za-z])|america|united\s*states|🇸🇬|新加坡|狮城|(?<![A-Za-z])SGP?(?![A-Za-z])|singapore|🇹🇼|台湾|台北|高雄|(?<![A-Za-z])TWN?(?![A-Za-z])|taiwan|🇩🇪|德国|德國|法兰克福|法蘭克福|柏林|慕尼黑|Germany|Frankfurt|Berlin|Munich|Nuremberg|Dusseldorf|(?<![A-Za-z0-9])(?:DE|DEU)(?![A-Za-z0-9])|🇳🇱|荷兰|荷蘭|阿姆斯特丹|鹿特丹|Netherlands|Holland|Amsterdam|Rotterdam|(?<![A-Za-z0-9])(?:NL|NLD)(?![A-Za-z0-9])|🇬🇧|英国|英國|伦敦|倫敦|曼彻斯特|United\s*Kingdom|Great\s*Britain|Britain|England|London|Manchester|(?<![A-Za-z0-9])(?:GB|GBR|UK)(?![A-Za-z0-9])|🇫🇷|法国|法國|巴黎|马赛|馬賽|France|Paris|Marseille|(?<![A-Za-z0-9])(?:FR|FRA)(?![A-Za-z0-9])|🇰🇷|韩国|韓國|首尔|首爾|釜山|South\s*Korea|Korea|Seoul|Busan|(?<![A-Za-z0-9])(?:KR|KOR)(?![A-Za-z0-9])|🇨🇦|加拿大|多伦多|多倫多|温哥华|溫哥華|Canada|Toronto|Vancouver|Montreal|(?<![A-Za-z0-9])(?:CA|CAN)(?![A-Za-z0-9])|🇦🇺|澳大利亚|澳大利亞|澳洲|悉尼|墨尔本|墨爾本|Australia|Sydney|Melbourne|Brisbane|(?<![A-Za-z0-9])(?:AU|AUS)(?![A-Za-z0-9])|🇨🇭|瑞士|苏黎世|蘇黎世|日内瓦|日內瓦|Switzerland|Zurich|Geneva|(?<![A-Za-z0-9])(?:CH|CHE)(?![A-Za-z0-9])|🇸🇪|瑞典|斯德哥尔摩|斯德哥爾摩|Sweden|Stockholm|(?<![A-Za-z0-9])(?:SE|SWE)(?![A-Za-z0-9])|🇫🇮|芬兰|芬蘭|赫尔辛基|赫爾辛基|Finland|Helsinki|(?<![A-Za-z0-9])(?:FI|FIN)(?![A-Za-z0-9])|🇵🇱|波兰|波蘭|华沙|華沙|Poland|Warsaw|Krakow|(?<![A-Za-z0-9])(?:PL|POL)(?![A-Za-z0-9])|🇮🇹|意大利|罗马|羅馬|米兰|米蘭|Italy|Rome|Milan|(?<![A-Za-z0-9])(?:IT|ITA)(?![A-Za-z0-9])|🇪🇸|西班牙|马德里|馬德里|巴塞罗那|巴塞羅那|Spain|Madrid|Barcelona|(?<![A-Za-z0-9])(?:ES|ESP)(?![A-Za-z0-9])|🇮🇳|印度|孟买|孟買|新德里|India|Mumbai|New\s*Delhi|Bangalore|(?<![A-Za-z0-9])(?:IN|IND)(?![A-Za-z0-9])|🇳🇴|挪威|奥斯陆|奧斯陸|Norway|Oslo|(?<![A-Za-z0-9])(?:NO|NOR)(?![A-Za-z0-9])|🇮🇪|爱尔兰|愛爾蘭|都柏林|Ireland|Dublin|(?<![A-Za-z0-9])(?:IE|IRL)(?![A-Za-z0-9]))',
   }
 
 # 定义分流策略组
@@ -535,112 +535,112 @@ proxy-groups:
     <<: [*group_common_select, *DE_filter]
     include-all: true
     proxies: ['德国-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1e9-1f1ea.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e9-1f1ea.svg'
   - name: '德国-自动选择'
     <<: [*group_common_auto, *DE_filter]
   - name: '荷兰'
     <<: [*group_common_select, *NL_filter]
     include-all: true
     proxies: ['荷兰-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1f3-1f1f1.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f3-1f1f1.svg'
   - name: '荷兰-自动选择'
     <<: [*group_common_auto, *NL_filter]
   - name: '英国'
     <<: [*group_common_select, *GB_filter]
     include-all: true
     proxies: ['英国-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1ec-1f1e7.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ec-1f1e7.svg'
   - name: '英国-自动选择'
     <<: [*group_common_auto, *GB_filter]
   - name: '法国'
     <<: [*group_common_select, *FR_filter]
     include-all: true
     proxies: ['法国-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1eb-1f1f7.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1f7.svg'
   - name: '法国-自动选择'
     <<: [*group_common_auto, *FR_filter]
   - name: '韩国'
     <<: [*group_common_select, *KR_filter]
     include-all: true
     proxies: ['韩国-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1f0-1f1f7.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f0-1f1f7.svg'
   - name: '韩国-自动选择'
     <<: [*group_common_auto, *KR_filter]
   - name: '加拿大'
     <<: [*group_common_select, *CA_filter]
     include-all: true
     proxies: ['加拿大-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1e8-1f1e6.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e8-1f1e6.svg'
   - name: '加拿大-自动选择'
     <<: [*group_common_auto, *CA_filter]
   - name: '澳大利亚'
     <<: [*group_common_select, *AU_filter]
     include-all: true
     proxies: ['澳大利亚-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1e6-1f1fa.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e6-1f1fa.svg'
   - name: '澳大利亚-自动选择'
     <<: [*group_common_auto, *AU_filter]
   - name: '瑞士'
     <<: [*group_common_select, *CH_filter]
     include-all: true
     proxies: ['瑞士-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1e8-1f1ed.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e8-1f1ed.svg'
   - name: '瑞士-自动选择'
     <<: [*group_common_auto, *CH_filter]
   - name: '瑞典'
     <<: [*group_common_select, *SE_filter]
     include-all: true
     proxies: ['瑞典-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1f8-1f1ea.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f8-1f1ea.svg'
   - name: '瑞典-自动选择'
     <<: [*group_common_auto, *SE_filter]
   - name: '芬兰'
     <<: [*group_common_select, *FI_filter]
     include-all: true
     proxies: ['芬兰-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1eb-1f1ee.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1ee.svg'
   - name: '芬兰-自动选择'
     <<: [*group_common_auto, *FI_filter]
   - name: '波兰'
     <<: [*group_common_select, *PL_filter]
     include-all: true
     proxies: ['波兰-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1f5-1f1f1.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f5-1f1f1.svg'
   - name: '波兰-自动选择'
     <<: [*group_common_auto, *PL_filter]
   - name: '意大利'
     <<: [*group_common_select, *IT_filter]
     include-all: true
     proxies: ['意大利-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1ee-1f1f9.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ee-1f1f9.svg'
   - name: '意大利-自动选择'
     <<: [*group_common_auto, *IT_filter]
   - name: '西班牙'
     <<: [*group_common_select, *ES_filter]
     include-all: true
     proxies: ['西班牙-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1ea-1f1f8.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ea-1f1f8.svg'
   - name: '西班牙-自动选择'
     <<: [*group_common_auto, *ES_filter]
   - name: '印度'
     <<: [*group_common_select, *IN_filter]
     include-all: true
     proxies: ['印度-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1ee-1f1f3.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ee-1f1f3.svg'
   - name: '印度-自动选择'
     <<: [*group_common_auto, *IN_filter]
   - name: '挪威'
     <<: [*group_common_select, *NO_filter]
     include-all: true
     proxies: ['挪威-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1f3-1f1f4.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f3-1f1f4.svg'
   - name: '挪威-自动选择'
     <<: [*group_common_auto, *NO_filter]
   - name: '爱尔兰'
     <<: [*group_common_select, *IE_filter]
     include-all: true
     proxies: ['爱尔兰-自动选择']
-    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1ee-1f1ea.svg'
+    icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ee-1f1ea.svg'
   - name: '爱尔兰-自动选择'
     <<: [*group_common_auto, *IE_filter]
   - name: '低倍率节点'
