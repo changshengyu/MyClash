@@ -186,19 +186,22 @@ const regionDefinitions = [
   {
     name: '德国',
     flag: '🇩🇪',
-    regex: /🇩🇪|德国|德國|法兰克福|法蘭克福|柏林|慕尼黑|Germany|Frankfurt|Berlin|Munich|Nuremberg|Dusseldorf|(?<![A-Za-z])(?:DE|DEU)(?![A-Za-z])/i,
+    regex:
+      /🇩🇪|德国|德國|法兰克福|法蘭克福|柏林|慕尼黑|Germany|Frankfurt|Berlin|Munich|Nuremberg|Dusseldorf|(?<![A-Za-z])(?:DE|DEU)(?![A-Za-z])/i,
     icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1e9-1f1ea.svg',
   },
   {
     name: '荷兰',
     flag: '🇳🇱',
-    regex: /🇳🇱|荷兰|荷蘭|阿姆斯特丹|鹿特丹|Netherlands|Holland|Amsterdam|Rotterdam|(?<![A-Za-z])(?:NL|NLD)(?![A-Za-z])/i,
+    regex:
+      /🇳🇱|荷兰|荷蘭|阿姆斯特丹|鹿特丹|Netherlands|Holland|Amsterdam|Rotterdam|(?<![A-Za-z])(?:NL|NLD)(?![A-Za-z])/i,
     icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1f3-1f1f1.svg',
   },
   {
     name: '英国',
     flag: '🇬🇧',
-    regex: /🇬🇧|英国|英國|伦敦|倫敦|曼彻斯特|United\s*Kingdom|Great\s*Britain|Britain|England|London|Manchester|(?<![A-Za-z])(?:GB|GBR|UK)(?![A-Za-z])/i,
+    regex:
+      /🇬🇧|英国|英國|伦敦|倫敦|曼彻斯特|United\s*Kingdom|Great\s*Britain|Britain|England|London|Manchester|(?<![A-Za-z])(?:GB|GBR|UK)(?![A-Za-z])/i,
     icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1ec-1f1e7.svg',
   },
   {
@@ -216,13 +219,15 @@ const regionDefinitions = [
   {
     name: '加拿大',
     flag: '🇨🇦',
-    regex: /🇨🇦|加拿大|多伦多|多倫多|温哥华|溫哥華|Canada|Toronto|Vancouver|Montreal|(?<![A-Za-z])(?:CA|CAN)(?![A-Za-z])/i,
+    regex:
+      /🇨🇦|加拿大|多伦多|多倫多|温哥华|溫哥華|Canada|Toronto|Vancouver|Montreal|(?<![A-Za-z])(?:CA|CAN)(?![A-Za-z])/i,
     icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1e8-1f1e6.svg',
   },
   {
     name: '澳大利亚',
     flag: '🇦🇺',
-    regex: /🇦🇺|澳大利亚|澳大利亞|澳洲|悉尼|墨尔本|墨爾本|Australia|Sydney|Melbourne|Brisbane|(?<![A-Za-z])(?:AU|AUS)(?![A-Za-z])/i,
+    regex:
+      /🇦🇺|澳大利亚|澳大利亞|澳洲|悉尼|墨尔本|墨爾本|Australia|Sydney|Melbourne|Brisbane|(?<![A-Za-z])(?:AU|AUS)(?![A-Za-z])/i,
     icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1e6-1f1fa.svg',
   },
   {

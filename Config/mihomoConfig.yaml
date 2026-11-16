@@ -496,20 +496,52 @@ US_filter:
   }
 SG_filter: &SG_filter { filter: '(?i)(🇸🇬|新加坡|狮城|(?<![A-Za-z])SGP?(?![A-Za-z])|singapore)' }
 TW_filter: &TW_filter { filter: '(?i)(🇹🇼|台湾|台北|高雄|(?<![A-Za-z])TWN?(?![A-Za-z])|taiwan)' }
-DE_filter: &DE_filter { filter: '(?i)(🇩🇪|德国|德國|法兰克福|法蘭克福|柏林|慕尼黑|Germany|Frankfurt|Berlin|Munich|Nuremberg|Dusseldorf|(?<![A-Za-z])(?:DE|DEU)(?![A-Za-z]))' }
-NL_filter: &NL_filter { filter: '(?i)(🇳🇱|荷兰|荷蘭|阿姆斯特丹|鹿特丹|Netherlands|Holland|Amsterdam|Rotterdam|(?<![A-Za-z])(?:NL|NLD)(?![A-Za-z]))' }
-GB_filter: &GB_filter { filter: '(?i)(🇬🇧|英国|英國|伦敦|倫敦|曼彻斯特|United\s*Kingdom|Great\s*Britain|Britain|England|London|Manchester|(?<![A-Za-z])(?:GB|GBR|UK)(?![A-Za-z]))' }
-FR_filter: &FR_filter { filter: '(?i)(🇫🇷|法国|法國|巴黎|马赛|馬賽|France|Paris|Marseille|(?<![A-Za-z])(?:FR|FRA)(?![A-Za-z]))' }
-KR_filter: &KR_filter { filter: '(?i)(🇰🇷|韩国|韓國|首尔|首爾|釜山|South\s*Korea|Korea|Seoul|Busan|(?<![A-Za-z])(?:KR|KOR)(?![A-Za-z]))' }
-CA_filter: &CA_filter { filter: '(?i)(🇨🇦|加拿大|多伦多|多倫多|温哥华|溫哥華|Canada|Toronto|Vancouver|Montreal|(?<![A-Za-z])(?:CA|CAN)(?![A-Za-z]))' }
-AU_filter: &AU_filter { filter: '(?i)(🇦🇺|澳大利亚|澳大利亞|澳洲|悉尼|墨尔本|墨爾本|Australia|Sydney|Melbourne|Brisbane|(?<![A-Za-z])(?:AU|AUS)(?![A-Za-z]))' }
-CH_filter: &CH_filter { filter: '(?i)(🇨🇭|瑞士|苏黎世|蘇黎世|日内瓦|日內瓦|Switzerland|Zurich|Geneva|(?<![A-Za-z])(?:CH|CHE)(?![A-Za-z]))' }
-SE_filter: &SE_filter { filter: '(?i)(🇸🇪|瑞典|斯德哥尔摩|斯德哥爾摩|Sweden|Stockholm|(?<![A-Za-z])(?:SE|SWE)(?![A-Za-z]))' }
-FI_filter: &FI_filter { filter: '(?i)(🇫🇮|芬兰|芬蘭|赫尔辛基|赫爾辛基|Finland|Helsinki|(?<![A-Za-z])(?:FI|FIN)(?![A-Za-z]))' }
-PL_filter: &PL_filter { filter: '(?i)(🇵🇱|波兰|波蘭|华沙|華沙|Poland|Warsaw|Krakow|(?<![A-Za-z])(?:PL|POL)(?![A-Za-z]))' }
-IT_filter: &IT_filter { filter: '(?i)(🇮🇹|意大利|罗马|羅馬|米兰|米蘭|Italy|Rome|Milan|(?<![A-Za-z])(?:IT|ITA)(?![A-Za-z]))' }
-ES_filter: &ES_filter { filter: '(?i)(🇪🇸|西班牙|马德里|馬德里|巴塞罗那|巴塞羅那|Spain|Madrid|Barcelona|(?<![A-Za-z])(?:ES|ESP)(?![A-Za-z]))' }
-IN_filter: &IN_filter { filter: '(?i)(🇮🇳|印度|孟买|孟買|新德里|India|Mumbai|New\s*Delhi|Bangalore|(?<![A-Za-z])(?:IN|IND)(?![A-Za-z]))' }
+DE_filter:
+  &DE_filter {
+    filter: '(?i)(🇩🇪|德国|德國|法兰克福|法蘭克福|柏林|慕尼黑|Germany|Frankfurt|Berlin|Munich|Nuremberg|Dusseldorf|(?<![A-Za-z])(?:DE|DEU)(?![A-Za-z]))',
+  }
+NL_filter:
+  &NL_filter {
+    filter: '(?i)(🇳🇱|荷兰|荷蘭|阿姆斯特丹|鹿特丹|Netherlands|Holland|Amsterdam|Rotterdam|(?<![A-Za-z])(?:NL|NLD)(?![A-Za-z]))',
+  }
+GB_filter:
+  &GB_filter {
+    filter: '(?i)(🇬🇧|英国|英國|伦敦|倫敦|曼彻斯特|United\s*Kingdom|Great\s*Britain|Britain|England|London|Manchester|(?<![A-Za-z])(?:GB|GBR|UK)(?![A-Za-z]))',
+  }
+FR_filter:
+  &FR_filter { filter: '(?i)(🇫🇷|法国|法國|巴黎|马赛|馬賽|France|Paris|Marseille|(?<![A-Za-z])(?:FR|FRA)(?![A-Za-z]))' }
+KR_filter:
+  &KR_filter {
+    filter: '(?i)(🇰🇷|韩国|韓國|首尔|首爾|釜山|South\s*Korea|Korea|Seoul|Busan|(?<![A-Za-z])(?:KR|KOR)(?![A-Za-z]))',
+  }
+CA_filter:
+  &CA_filter {
+    filter: '(?i)(🇨🇦|加拿大|多伦多|多倫多|温哥华|溫哥華|Canada|Toronto|Vancouver|Montreal|(?<![A-Za-z])(?:CA|CAN)(?![A-Za-z]))',
+  }
+AU_filter:
+  &AU_filter {
+    filter: '(?i)(🇦🇺|澳大利亚|澳大利亞|澳洲|悉尼|墨尔本|墨爾本|Australia|Sydney|Melbourne|Brisbane|(?<![A-Za-z])(?:AU|AUS)(?![A-Za-z]))',
+  }
+CH_filter:
+  &CH_filter {
+    filter: '(?i)(🇨🇭|瑞士|苏黎世|蘇黎世|日内瓦|日內瓦|Switzerland|Zurich|Geneva|(?<![A-Za-z])(?:CH|CHE)(?![A-Za-z]))',
+  }
+SE_filter:
+  &SE_filter { filter: '(?i)(🇸🇪|瑞典|斯德哥尔摩|斯德哥爾摩|Sweden|Stockholm|(?<![A-Za-z])(?:SE|SWE)(?![A-Za-z]))' }
+FI_filter:
+  &FI_filter { filter: '(?i)(🇫🇮|芬兰|芬蘭|赫尔辛基|赫爾辛基|Finland|Helsinki|(?<![A-Za-z])(?:FI|FIN)(?![A-Za-z]))' }
+PL_filter:
+  &PL_filter { filter: '(?i)(🇵🇱|波兰|波蘭|华沙|華沙|Poland|Warsaw|Krakow|(?<![A-Za-z])(?:PL|POL)(?![A-Za-z]))' }
+IT_filter:
+  &IT_filter { filter: '(?i)(🇮🇹|意大利|罗马|羅馬|米兰|米蘭|Italy|Rome|Milan|(?<![A-Za-z])(?:IT|ITA)(?![A-Za-z]))' }
+ES_filter:
+  &ES_filter {
+    filter: '(?i)(🇪🇸|西班牙|马德里|馬德里|巴塞罗那|巴塞羅那|Spain|Madrid|Barcelona|(?<![A-Za-z])(?:ES|ESP)(?![A-Za-z]))',
+  }
+IN_filter:
+  &IN_filter {
+    filter: '(?i)(🇮🇳|印度|孟买|孟買|新德里|India|Mumbai|New\s*Delhi|Bangalore|(?<![A-Za-z])(?:IN|IND)(?![A-Za-z]))',
+  }
 NO_filter: &NO_filter { filter: '(?i)(🇳🇴|挪威|奥斯陆|奧斯陸|Norway|Oslo|(?<![A-Za-z])(?:NO|NOR)(?![A-Za-z]))' }
 IE_filter: &IE_filter { filter: '(?i)(🇮🇪|爱尔兰|愛爾蘭|都柏林|Ireland|Dublin|(?<![A-Za-z])(?:IE|IRL)(?![A-Za-z]))' }
 low_filter:
