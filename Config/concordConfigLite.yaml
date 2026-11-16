@@ -447,6 +447,8 @@ proxy-groups:
 # --- 路由规则 (Rules) ---
 
 rules:
+  - DOMAIN-SUFFIX,yuchsh.top,DIRECT
+  - DOMAIN,prts.maa.plus,DIRECT
   # 广告拦截
   - RULE-SET,category-ads,AdBlock
 
