@@ -164,6 +164,102 @@ const regionDefinitions = [
     regex: /🇹🇼|台湾|台北|高雄|(?<![A-Za-z])TWN?(?![A-Za-z])|taiwan/i,
     icon: `${iconBaseUrl}Taiwan.svg`,
   },
+  {
+    name: '德国',
+    flag: '🇩🇪',
+    regex: /🇩🇪|德国|德國|法兰克福|法蘭克福|柏林|慕尼黑|Germany|Frankfurt|Berlin|Munich|Nuremberg|Dusseldorf|(?<![A-Za-z])(?:DE|DEU)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1e9-1f1ea.svg',
+  },
+  {
+    name: '荷兰',
+    flag: '🇳🇱',
+    regex: /🇳🇱|荷兰|荷蘭|阿姆斯特丹|鹿特丹|Netherlands|Holland|Amsterdam|Rotterdam|(?<![A-Za-z])(?:NL|NLD)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1f3-1f1f1.svg',
+  },
+  {
+    name: '英国',
+    flag: '🇬🇧',
+    regex: /🇬🇧|英国|英國|伦敦|倫敦|曼彻斯特|United\s*Kingdom|Great\s*Britain|Britain|England|London|Manchester|(?<![A-Za-z])(?:GB|GBR|UK)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1ec-1f1e7.svg',
+  },
+  {
+    name: '法国',
+    flag: '🇫🇷',
+    regex: /🇫🇷|法国|法國|巴黎|马赛|馬賽|France|Paris|Marseille|(?<![A-Za-z])(?:FR|FRA)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1eb-1f1f7.svg',
+  },
+  {
+    name: '韩国',
+    flag: '🇰🇷',
+    regex: /🇰🇷|韩国|韓國|首尔|首爾|釜山|South\s*Korea|Korea|Seoul|Busan|(?<![A-Za-z])(?:KR|KOR)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1f0-1f1f7.svg',
+  },
+  {
+    name: '加拿大',
+    flag: '🇨🇦',
+    regex: /🇨🇦|加拿大|多伦多|多倫多|温哥华|溫哥華|Canada|Toronto|Vancouver|Montreal|(?<![A-Za-z])(?:CA|CAN)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1e8-1f1e6.svg',
+  },
+  {
+    name: '澳大利亚',
+    flag: '🇦🇺',
+    regex: /🇦🇺|澳大利亚|澳大利亞|澳洲|悉尼|墨尔本|墨爾本|Australia|Sydney|Melbourne|Brisbane|(?<![A-Za-z])(?:AU|AUS)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1e6-1f1fa.svg',
+  },
+  {
+    name: '瑞士',
+    flag: '🇨🇭',
+    regex: /🇨🇭|瑞士|苏黎世|蘇黎世|日内瓦|日內瓦|Switzerland|Zurich|Geneva|(?<![A-Za-z])(?:CH|CHE)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1e8-1f1ed.svg',
+  },
+  {
+    name: '瑞典',
+    flag: '🇸🇪',
+    regex: /🇸🇪|瑞典|斯德哥尔摩|斯德哥爾摩|Sweden|Stockholm|(?<![A-Za-z])(?:SE|SWE)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1f8-1f1ea.svg',
+  },
+  {
+    name: '芬兰',
+    flag: '🇫🇮',
+    regex: /🇫🇮|芬兰|芬蘭|赫尔辛基|赫爾辛基|Finland|Helsinki|(?<![A-Za-z])(?:FI|FIN)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1eb-1f1ee.svg',
+  },
+  {
+    name: '波兰',
+    flag: '🇵🇱',
+    regex: /🇵🇱|波兰|波蘭|华沙|華沙|Poland|Warsaw|Krakow|(?<![A-Za-z])(?:PL|POL)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1f5-1f1f1.svg',
+  },
+  {
+    name: '意大利',
+    flag: '🇮🇹',
+    regex: /🇮🇹|意大利|罗马|羅馬|米兰|米蘭|Italy|Rome|Milan|(?<![A-Za-z])(?:IT|ITA)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1ee-1f1f9.svg',
+  },
+  {
+    name: '西班牙',
+    flag: '🇪🇸',
+    regex: /🇪🇸|西班牙|马德里|馬德里|巴塞罗那|巴塞羅那|Spain|Madrid|Barcelona|(?<![A-Za-z])(?:ES|ESP)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1ea-1f1f8.svg',
+  },
+  {
+    name: '印度',
+    flag: '🇮🇳',
+    regex: /🇮🇳|印度|孟买|孟買|新德里|India|Mumbai|New\s*Delhi|Bangalore|(?<![A-Za-z])(?:IN|IND)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1ee-1f1f3.svg',
+  },
+  {
+    name: '挪威',
+    flag: '🇳🇴',
+    regex: /🇳🇴|挪威|奥斯陆|奧斯陸|Norway|Oslo|(?<![A-Za-z])(?:NO|NOR)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1f3-1f1f4.svg',
+  },
+  {
+    name: '爱尔兰',
+    flag: '🇮🇪',
+    regex: /🇮🇪|爱尔兰|愛爾蘭|都柏林|Ireland|Dublin|(?<![A-Za-z])(?:IE|IRL)(?![A-Za-z])/i,
+    icon: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/1f1ee-1f1ea.svg',
+  },
 ];
 
 // 定义倍率策略组
