@@ -41,7 +41,7 @@ jobs:
           # 同一处出现冲突时优先采用上游版本，随后重新添加个人规则
           git merge --no-edit -X theirs upstream/main
 
-      - name: Apply custom DIRECT rules
+      - name: Apply custom DIRECT rules to all JS/YAML files
         shell: bash
         run: |
           set -euo pipefail
@@ -49,40 +49,78 @@ jobs:
           from pathlib import Path
           import re
 
-          path = Path('Script/Script.js')
-          content = path.read_text(encoding='utf-8')
-          pattern = re.compile(
-              r'(?ms)^[ \t]*const[ \t]+prefixRules[ \t]*=[ \t]*\[[ \t]*\r?\n(?P<body>.*?)^[ \t]*\];'
-          )
-          matches = list(pattern.finditer(content))
-          if len(matches) != 1:
-              raise SystemExit('prefixRules 结构已变化，自动修改中止，请人工检查上游脚本。')
-
-          block = matches[0]
-          existing = set(re.findall(r'''["']([^"'\r\n]+)["']''', block.group('body')))
-          required = [
+          required = (
               'DOMAIN-SUFFIX,yuchsh.top,DIRECT',
               'DOMAIN,prts.maa.plus,DIRECT',
-          ]
-          missing = [rule for rule in required if rule not in existing]
-          if missing:
-              insert = ''.join(f"  '{rule}',\n" for rule in missing)
-              start = block.start('body')
-              content = content[:start] + insert + content[start:]
-              path.write_text(content, encoding='utf-8')
-          print('规则检查完成，新增：' + (', '.join(missing) if missing else '无（已存在）'))
+          )
+          roots = (Path('Script'), Path('Config'))
+          suffixes = {'.js', '.yaml', '.yml'}
+          files = sorted(
+              path
+              for root in roots
+              for path in root.rglob('*')
+              if path.is_file() and path.suffix.lower() in suffixes
+          )
+          if not files:
+              raise SystemExit('Script/ 和 Config/ 中没有找到 JS/YAML 文件')
+
+          js_pattern = re.compile(
+              r'(?ms)^[ \t]*const[ \t]+prefixRules[ \t]*=[ \t]*\[[ \t]*\r?\n(?P<body>.*?)^[ \t]*\];'
+          )
+          yaml_pattern = re.compile(r'(?m)^rules:[ \t]*(?:#.*)?(?:\r?\n|$)')
+
+          for path in files:
+              with path.open('r', encoding='utf-8', newline='') as file:
+                  content = file.read()
+              newline = '\r\n' if '\r\n' in content else '\n'
+
+              if path.suffix.lower() == '.js':
+                  matches = list(js_pattern.finditer(content))
+                  if len(matches) != 1:
+                      raise SystemExit(f'{path}: 无法唯一定位 prefixRules，请人工检查')
+                  match = matches[0]
+                  existing = set(re.findall(r'''["']([^"'\r\n]+)["']''', match.group('body')))
+                  missing = [rule for rule in required if rule not in existing]
+                  position = match.start('body')
+                  insert = ''.join(f"  '{rule}',{newline}" for rule in missing)
+              else:
+                  matches = list(yaml_pattern.finditer(content))
+                  if len(matches) != 1:
+                      raise SystemExit(f'{path}: 无法唯一定位顶层 rules:，请人工检查')
+                  match = matches[0]
+                  # 只检查 rules: 对应的列表，不误判文件其他区域的规则。
+                  rest = content[match.end():]
+                  next_key = re.search(r'(?m)^[A-Za-z_][A-Za-z0-9_.-]*:[ \t]*', rest)
+                  section = rest[:next_key.start()] if next_key else rest
+                  existing = {
+                      item.group('value').strip().strip('"\'')
+                      for item in re.finditer(r'(?m)^[ \t]+-[ \t]+(?P<value>[^#\r\n]+)', section)
+                  }
+                  missing = [rule for rule in required if rule not in existing]
+                  position = match.end()
+                  insert = ''.join(f'  - {rule}{newline}' for rule in missing)
+
+              if missing:
+                  updated = content[:position] + insert + content[position:]
+                  with path.open('w', encoding='utf-8', newline='') as file:
+                      file.write(updated)
+              print(f'{path}: ' + ('新增 ' + ', '.join(missing) if missing else '已存在，无需修改'))
           PY
 
-      - name: Verify JavaScript syntax
-        run: node --check Script/Script.js
+      - name: Verify JavaScript syntax and whitespace
+        shell: bash
+        run: |
+          set -euo pipefail
+          find Script Config -type f -name '*.js' -print0 | xargs -0 -r -n 1 node --check
+          git diff --check
 
       - name: Commit and push if changed
         shell: bash
         run: |
           set -euo pipefail
-          git add Script/Script.js
+          git add -A -- Script Config
           if ! git diff --cached --quiet; then
-            git commit -m 'chore: apply personal DIRECT rules'
+            git commit -m 'chore: apply personal DIRECT rules to JS and YAML'
           fi
           git push origin HEAD:main
 
