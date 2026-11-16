@@ -186,97 +186,113 @@ const regionDefinitions = [
   {
     name: '德国',
     flag: '🇩🇪',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇩🇪|德国|德國|法兰克福|法蘭克福|柏林|慕尼黑|Germany|Frankfurt|Berlin|Munich|Nuremberg|Dusseldorf|(?<![A-Za-z0-9])(?:DE|DEU)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇩🇪|德国|德國|法兰克福|法蘭克福|柏林|慕尼黑|Germany|Frankfurt|Berlin|Munich|Nuremberg|Dusseldorf|(?<![A-Za-z0-9])(?:DE|DEU)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e9-1f1ea.svg',
   },
   {
     name: '荷兰',
     flag: '🇳🇱',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇳🇱|荷兰|荷蘭|阿姆斯特丹|鹿特丹|Netherlands|Holland|Amsterdam|Rotterdam|(?<![A-Za-z0-9])(?:NL|NLD)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇳🇱|荷兰|荷蘭|阿姆斯特丹|鹿特丹|Netherlands|Holland|Amsterdam|Rotterdam|(?<![A-Za-z0-9])(?:NL|NLD)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f3-1f1f1.svg',
   },
   {
     name: '英国',
     flag: '🇬🇧',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇬🇧|英国|英國|伦敦|倫敦|曼彻斯特|United\s*Kingdom|Great\s*Britain|Britain|England|London|Manchester|(?<![A-Za-z0-9])(?:GB|GBR|UK)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇬🇧|英国|英國|伦敦|倫敦|曼彻斯特|United\s*Kingdom|Great\s*Britain|Britain|England|London|Manchester|(?<![A-Za-z0-9])(?:GB|GBR|UK)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ec-1f1e7.svg',
   },
   {
     name: '法国',
     flag: '🇫🇷',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇫🇷|法国|法國|巴黎|马赛|馬賽|France|Paris|Marseille|(?<![A-Za-z0-9])(?:FR|FRA)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇫🇷|法国|法國|巴黎|马赛|馬賽|France|Paris|Marseille|(?<![A-Za-z0-9])(?:FR|FRA)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1f7.svg',
   },
   {
     name: '韩国',
     flag: '🇰🇷',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇰🇷|韩国|韓國|首尔|首爾|釜山|South\s*Korea|Korea|Seoul|Busan|(?<![A-Za-z0-9])(?:KR|KOR)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇰🇷|韩国|韓國|首尔|首爾|釜山|South\s*Korea|Korea|Seoul|Busan|(?<![A-Za-z0-9])(?:KR|KOR)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f0-1f1f7.svg',
   },
   {
     name: '加拿大',
     flag: '🇨🇦',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇨🇦|加拿大|多伦多|多倫多|温哥华|溫哥華|Canada|Toronto|Vancouver|Montreal|(?<![A-Za-z0-9])(?:CA|CAN)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇨🇦|加拿大|多伦多|多倫多|温哥华|溫哥華|Canada|Toronto|Vancouver|Montreal|(?<![A-Za-z0-9])(?:CA|CAN)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e8-1f1e6.svg',
   },
   {
     name: '澳大利亚',
     flag: '🇦🇺',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇦🇺|澳大利亚|澳大利亞|澳洲|悉尼|墨尔本|墨爾本|Australia|Sydney|Melbourne|Brisbane|(?<![A-Za-z0-9])(?:AU|AUS)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇦🇺|澳大利亚|澳大利亞|澳洲|悉尼|墨尔本|墨爾本|Australia|Sydney|Melbourne|Brisbane|(?<![A-Za-z0-9])(?:AU|AUS)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e6-1f1fa.svg',
   },
   {
     name: '瑞士',
     flag: '🇨🇭',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇨🇭|瑞士|苏黎世|蘇黎世|日内瓦|日內瓦|Switzerland|Zurich|Geneva|(?<![A-Za-z0-9])(?:CH|CHE)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇨🇭|瑞士|苏黎世|蘇黎世|日内瓦|日內瓦|Switzerland|Zurich|Geneva|(?<![A-Za-z0-9])(?:CH|CHE)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e8-1f1ed.svg',
   },
   {
     name: '瑞典',
     flag: '🇸🇪',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇸🇪|瑞典|斯德哥尔摩|斯德哥爾摩|Sweden|Stockholm|(?<![A-Za-z0-9])(?:SE|SWE)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇸🇪|瑞典|斯德哥尔摩|斯德哥爾摩|Sweden|Stockholm|(?<![A-Za-z0-9])(?:SE|SWE)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f8-1f1ea.svg',
   },
   {
     name: '芬兰',
     flag: '🇫🇮',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇫🇮|芬兰|芬蘭|赫尔辛基|赫爾辛基|Finland|Helsinki|(?<![A-Za-z0-9])(?:FI|FIN)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇫🇮|芬兰|芬蘭|赫尔辛基|赫爾辛基|Finland|Helsinki|(?<![A-Za-z0-9])(?:FI|FIN)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1ee.svg',
   },
   {
     name: '波兰',
     flag: '🇵🇱',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇵🇱|波兰|波蘭|华沙|華沙|Poland|Warsaw|Krakow|(?<![A-Za-z0-9])(?:PL|POL)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇵🇱|波兰|波蘭|华沙|華沙|Poland|Warsaw|Krakow|(?<![A-Za-z0-9])(?:PL|POL)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f5-1f1f1.svg',
   },
   {
     name: '意大利',
     flag: '🇮🇹',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇮🇹|意大利|罗马|羅馬|米兰|米蘭|Italy|Rome|Milan|(?<![A-Za-z0-9])(?:IT|ITA)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇮🇹|意大利|罗马|羅馬|米兰|米蘭|Italy|Rome|Milan|(?<![A-Za-z0-9])(?:IT|ITA)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ee-1f1f9.svg',
   },
   {
     name: '西班牙',
     flag: '🇪🇸',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇪🇸|西班牙|马德里|馬德里|巴塞罗那|巴塞羅那|Spain|Madrid|Barcelona|(?<![A-Za-z0-9])(?:ES|ESP)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇪🇸|西班牙|马德里|馬德里|巴塞罗那|巴塞羅那|Spain|Madrid|Barcelona|(?<![A-Za-z0-9])(?:ES|ESP)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ea-1f1f8.svg',
   },
   {
     name: '印度',
     flag: '🇮🇳',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇮🇳|印度|孟买|孟買|新德里|India|Mumbai|New\s*Delhi|Bangalore|(?<![A-Za-z0-9])(?:IN|IND)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇮🇳|印度|孟买|孟買|新德里|India|Mumbai|New\s*Delhi|Bangalore|(?<![A-Za-z0-9])(?:IN|IND)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ee-1f1f3.svg',
   },
   {
     name: '挪威',
     flag: '🇳🇴',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇳🇴|挪威|奥斯陆|奧斯陸|Norway|Oslo|(?<![A-Za-z0-9])(?:NO|NOR)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇳🇴|挪威|奥斯陆|奧斯陸|Norway|Oslo|(?<![A-Za-z0-9])(?:NO|NOR)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f3-1f1f4.svg',
   },
   {
     name: '爱尔兰',
     flag: '🇮🇪',
-    regex: /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇮🇪|爱尔兰|愛爾蘭|都柏林|Ireland|Dublin|(?<![A-Za-z0-9])(?:IE|IRL)(?![A-Za-z0-9]))/i,
+    regex:
+      /^(?!.*(?:到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription)).*(?:🇮🇪|爱尔兰|愛爾蘭|都柏林|Ireland|Dublin|(?<![A-Za-z0-9])(?:IE|IRL)(?![A-Za-z0-9]))/i,
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ee-1f1ea.svg',
   },
 ];
