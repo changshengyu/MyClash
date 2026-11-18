@@ -6,6 +6,11 @@ on:
     # GitHub 定时任务可能延迟或丢弃，多跑几次保证当天能同步；无新内容时不会产生提交
     - cron: '23 3,11,19 * * *'
   workflow_dispatch:
+    inputs:
+      regions:
+        description: '新增地区代码（逗号分隔；留空使用默认地区），如 DE,NL,GB,FR'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -14,6 +19,11 @@ permissions:
 concurrency:
   group: myclash-sync-main
   cancel-in-progress: false
+
+# 定时同步的默认地区；手动运行时可用 regions 输入框临时指定子集。
+# 支持的地区代码和节点关键词在下方 REGIONS 数据表中维护。
+env:
+  EXTRA_REGION_CODES: ${{ github.event.inputs.regions || 'DE,NL,GB,FR,KR,CA,AU,CH,SE,FI,PL,IT,ES,IN,NO,IE' }}
 
 jobs:
   sync:
@@ -39,79 +49,431 @@ jobs:
           git remote add upstream https://github.com/AIsouler/MyClash.git
           git fetch upstream main
           # 同一处出现冲突时优先采用上游版本，随后重新添加个人规则
-          git merge --no-edit -X theirs upstream/main
+          concord_files=(
+            Script/concordScript.js Script/concordScriptLite.js
+            Config/concordConfig.yaml Config/concordConfigLite.yaml
+          )
+          restore_concord() {
+            local file="$1" source
+            for source in upstream/main "$BEFORE_SHA"; do
+              if git cat-file -e "$source:$file"; then
+                git restore --source="$source" --staged --worktree -- "$file"
+                return
+              fi
+            done
+            echo "::error::无法从上游或合并前的版本恢复 $file"
+            return 1
+          }
 
-      - name: Apply custom DIRECT rules to all JS/YAML files
+          if ! git merge --no-edit -X theirs upstream/main; then
+            git rev-parse --verify -q MERGE_HEAD >/dev/null || exit 1
+            conflicts=$(git diff --name-only --diff-filter=U)
+            [[ -n "$conflicts" ]] || exit 1
+            while IFS= read -r file; do
+              case " ${concord_files[*]} " in
+                *" $file "*) restore_concord "$file" ;;
+                *) echo "::error::需要人工处理的合并冲突: $file"; exit 1 ;;
+              esac
+            done <<< "$conflicts"
+            git commit --no-edit
+          fi
+
+          # 即使上游没有新提交，也恢复此前被旧工作流删除的文件。
+          for file in "${concord_files[@]}"; do
+            if [[ ! -f "$file" ]]; then
+              restore_concord "$file"
+            fi
+          done
+
+      - name: Apply DIRECT rules and extra country groups to JS/YAML
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
+          import os
           import re
 
-          required = (
+          # 只需维护这一张地区表；手动运行 workflow 时可用地区代码选择子集。
+          # (地区中文名, 过滤器代码, 国旗, 节点关键词；使用 JavaScript / Mihomo 兼容的正则语法)
+          REGION_DATA = [
+              ('德国', 'DE', '🇩🇪', 'DEU', r'德国|德國|法兰克福|法蘭克福|柏林|慕尼黑|Germany|Frankfurt|Berlin|Munich|Nuremberg|Dusseldorf'),
+              ('荷兰', 'NL', '🇳🇱', 'NLD', r'荷兰|荷蘭|阿姆斯特丹|鹿特丹|Netherlands|Holland|Amsterdam|Rotterdam'),
+              ('英国', 'GB', '🇬🇧', 'GBR|UK', r'英国|英國|伦敦|倫敦|曼彻斯特|United\s*Kingdom|Great\s*Britain|Britain|England|London|Manchester'),
+              ('法国', 'FR', '🇫🇷', 'FRA', r'法国|法國|巴黎|马赛|馬賽|France|Paris|Marseille'),
+              ('韩国', 'KR', '🇰🇷', 'KOR', r'韩国|韓國|首尔|首爾|釜山|South\s*Korea|Korea|Seoul|Busan'),
+              ('加拿大', 'CA', '🇨🇦', 'CAN', r'加拿大|多伦多|多倫多|温哥华|溫哥華|Canada|Toronto|Vancouver|Montreal'),
+              ('澳大利亚', 'AU', '🇦🇺', 'AUS', r'澳大利亚|澳大利亞|澳洲|悉尼|墨尔本|墨爾本|Australia|Sydney|Melbourne|Brisbane'),
+              ('瑞士', 'CH', '🇨🇭', 'CHE', r'瑞士|苏黎世|蘇黎世|日内瓦|日內瓦|Switzerland|Zurich|Geneva'),
+              ('瑞典', 'SE', '🇸🇪', 'SWE', r'瑞典|斯德哥尔摩|斯德哥爾摩|Sweden|Stockholm'),
+              ('芬兰', 'FI', '🇫🇮', 'FIN', r'芬兰|芬蘭|赫尔辛基|赫爾辛基|Finland|Helsinki'),
+              ('波兰', 'PL', '🇵🇱', 'POL', r'波兰|波蘭|华沙|華沙|Poland|Warsaw|Krakow'),
+              ('意大利', 'IT', '🇮🇹', 'ITA', r'意大利|罗马|羅馬|米兰|米蘭|Italy|Rome|Milan'),
+              ('西班牙', 'ES', '🇪🇸', 'ESP', r'西班牙|马德里|馬德里|巴塞罗那|巴塞羅那|Spain|Madrid|Barcelona'),
+              ('印度', 'IN', '🇮🇳', 'IND', r'印度|孟买|孟買|新德里|India|Mumbai|New\s*Delhi|Bangalore'),
+              ('挪威', 'NO', '🇳🇴', 'NOR', r'挪威|奥斯陆|奧斯陸|Norway|Oslo'),
+              ('爱尔兰', 'IE', '🇮🇪', 'IRL', r'爱尔兰|愛爾蘭|都柏林|Ireland|Dublin'),
+          ]
+
+          # GB 在流量单位 1000GB 中不能被识别为英国；所有地区代码都必须与数字/字母隔开。
+          # 先按地名判断，再使用严格独立的 ISO 代码；额外排除订阅信息节点。
+          INFO_KEYWORDS = r'到期|已用|总量|流量|剩余|过期|有效期|订阅|套餐|客服|官网|通知|公告|充值|续费|工单|重置|更新订阅|expire|traffic|subscription'
+          REGIONS = {}
+          for name, code, flag, more_codes, terms in REGION_DATA:
+              flag_filename = '-'.join(f'{ord(ch):x}' for ch in flag) + '.svg'
+              region_pattern = f"{re.escape(flag)}|{terms}|(?<![A-Za-z0-9])(?:{code}|{more_codes})(?![A-Za-z0-9])"
+              REGIONS[code] = {
+                  'name': name, 'code': code, 'flag': flag,
+                  'pattern': region_pattern,
+                  # 从整段节点名起始检查是否包含订阅信息，再匹配地区。
+                  'js_pattern': f'^(?!.*(?:{INFO_KEYWORDS})).*(?:{region_pattern})',
+                  # 与上游已有国家图标使用相同的 fastly.jsdelivr.net CDN 域名。
+                  'icon': f'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/{flag_filename}',
+              }
+
+          requested = os.environ.get('EXTRA_REGION_CODES', ','.join(REGIONS)).upper().replace(' ', '')
+          codes = list(dict.fromkeys(code for code in requested.split(',') if code))
+          unknown = [code for code in codes if code not in REGIONS]
+          if unknown:
+              raise SystemExit('不支持的地区代码: ' + ', '.join(unknown) + '；可选: ' + ', '.join(REGIONS))
+          selected = [REGIONS[code] for code in codes]
+          if not selected:
+              raise SystemExit('至少应选择一个地区')
+
+          REQUIRED_DIRECT = (
               'DOMAIN-SUFFIX,yuchsh.top,DIRECT',
               'DOMAIN,prts.maa.plus,DIRECT',
           )
-          roots = (Path('Script'), Path('Config'))
-          suffixes = {'.js', '.yaml', '.yml'}
-          files = sorted(
-              path
-              for root in roots
-              for path in root.rglob('*')
-              if path.is_file() and path.suffix.lower() in suffixes
-          )
-          if not files:
-              raise SystemExit('Script/ 和 Config/ 中没有找到 JS/YAML 文件')
 
-          js_pattern = re.compile(
-              r'(?ms)^[ \t]*const[ \t]+prefixRules[ \t]*=[ \t]*\[[ \t]*\r?\n(?P<body>.*?)^[ \t]*\];'
-          )
-          yaml_pattern = re.compile(r'(?m)^rules:[ \t]*(?:#.*)?(?:\r?\n|$)')
 
-          for path in files:
-              with path.open('r', encoding='utf-8', newline='') as file:
-                  content = file.read()
-              newline = '\r\n' if '\r\n' in content else '\n'
-
-              if path.suffix.lower() == '.js':
-                  matches = list(js_pattern.finditer(content))
-                  if len(matches) != 1:
-                      raise SystemExit(f'{path}: 无法唯一定位 prefixRules，请人工检查')
-                  match = matches[0]
-                  existing = set(re.findall(r'''["']([^"'\r\n]+)["']''', match.group('body')))
-                  missing = [rule for rule in required if rule not in existing]
-                  position = match.start('body')
-                  insert = ''.join(f"  '{rule}',{newline}" for rule in missing)
-              else:
-                  matches = list(yaml_pattern.finditer(content))
-                  if len(matches) != 1:
-                      raise SystemExit(f'{path}: 无法唯一定位顶层 rules:，请人工检查')
-                  match = matches[0]
-                  # 只检查 rules: 对应的列表，不误判文件其他区域的规则。
-                  rest = content[match.end():]
-                  next_key = re.search(r'(?m)^[A-Za-z_][A-Za-z0-9_.-]*:[ \t]*', rest)
-                  section = rest[:next_key.start()] if next_key else rest
-                  existing = {
-                      item.group('value').strip().strip('"\'')
-                      for item in re.finditer(r'(?m)^[ \t]+-[ \t]+(?P<value>[^#\r\n]+)', section)
-                  }
-                  missing = [rule for rule in required if rule not in existing]
-                  position = match.end()
-                  insert = ''.join(f'  - {rule}{newline}' for rule in missing)
-
+          def apply_direct_js(text: str, path: Path) -> str:
+              match = re.search(r'(?ms)^[ \t]*const[ \t]+prefixRules[ \t]*=[ \t]*\[[ \t]*\r?\n(?P<body>.*?)^[ \t]*\];', text)
+              if not match:
+                  raise ValueError(f'{path}: 未找到标准 const prefixRules = [...] 定义，已停止以免改坏代码')
+              quoted = set(re.findall(r'''["']([^"'\r\n]+)["']''', match.group('body')))
+              missing = [x for x in REQUIRED_DIRECT if x not in quoted]
+              newline = '\r\n' if '\r\n' in text else '\n'
               if missing:
-                  updated = content[:position] + insert + content[position:]
-                  with path.open('w', encoding='utf-8', newline='') as file:
-                      file.write(updated)
-              print(f'{path}: ' + ('新增 ' + ', '.join(missing) if missing else '已存在，无需修改'))
+                  text = text[:match.start('body')] + ''.join(f"  '{v}',{newline}" for v in missing) + text[match.start('body'):]
+              return text
+
+
+          def apply_direct_yaml(text: str, path: Path) -> str:
+              # 支持 Mihomo 两种 YAML 列表写法：rules 下的缩进序列和无缩进序列。
+              match = re.search(r'(?m)^rules:[ \t]*(?:#.*)?\r?\n', text)
+              if not match:
+                  raise ValueError(f'{path}: 未找到顶层 rules: 列表')
+              tail = text[match.end():]
+              next_top = re.search(r'(?m)^[A-Za-z_][A-Za-z0-9_.-]*:[ \t]*', tail)
+              section = tail[:next_top.start()] if next_top else tail
+              lines = list(re.finditer(r'(?m)^([ \t]*)-[ \t]+([^#\r\n]+)', section))
+              values = {m.group(2).strip().strip("\'\"") for m in lines}
+              missing = [x for x in REQUIRED_DIRECT if x not in values]
+              if missing:
+                  newline = '\r\n' if '\r\n' in text else '\n'
+                  indent = lines[0].group(1) if lines else '  '
+                  text = text[:match.end()] + ''.join(f'{indent}- {v}{newline}' for v in missing) + text[match.end():]
+              return text
+
+          def apply_js_regions(text: str, path: Path) -> str:
+              match = re.search(r'(?ms)^(?P<indent>[ \t]*)const[ \t]+regionDefinitions[ \t]*=[ \t]*\[(?P<body>.*?)^(?P=indent)\];', text)
+              if not match:
+                  raise ValueError(f'{path}: 未找到 const regionDefinitions = [...]，无法保证地区组正确生成')
+              body = match.group('body')
+              newline = '\r\n' if '\r\n' in text else '\n'
+              # 旧版本有时把 regex 拆成多行。只替换 regex: 所在行会留下多余 /i,
+              # 导致 Node.js 报 Unexpected token '/'；这里按 name 定位整个地区对象，再整体重建。
+              # 仅接管本工作流添加的扩展地区，保留上游原生地区对象。
+              for r in selected:
+                  name = re.escape(r['name'])
+                  obj_re = re.compile(
+                      r'''(?ms)^[ \t]*\{[ \t]*\r?\n[ \t]*name:[ \t]*['"]'''
+                      + name + r'''['"][ \t]*,[\s\S]*?^[ \t]*\},[ \t]*(?:\r?\n|$)'''
+                  )
+                  entries = list(obj_re.finditer(body))
+                  if len(entries) > 1:
+                      raise ValueError(f'{path}: {r["name"]} 地区对象重复')
+                  if not entries and re.search(r'''\bname\s*:\s*['"]''' + name + r'''['"]''', body):
+                      raise ValueError(f'{path}: {r["name"]} 已存在但不是标准多行地区对象，拒绝重复写入')
+                  # 写成固定 5 行，彻底替换先前错误正则及遗留的尾部片段。
+                  new_object = newline.join([
+                      '  {',
+                      f"    name: '{r['name']}',",
+                      f"    flag: '{r['flag']}',",
+                      f"    regex: /{r['js_pattern']}/i,",
+                      f"    icon: '{r['icon']}',",
+                      '  },',
+                  ]) + newline
+                  if entries:
+                      existing = entries[0]
+                      current = existing.group(0)
+                      if (f"/{r['js_pattern']}/i" in current
+                              and r['icon'] in current
+                              and r['flag'] in current):
+                          continue  # 保留已正确配置的 Prettier 格式，避免重复提交
+                      body = body[:existing.start()] + new_object + body[existing.end():]
+                  else:
+                      # 初次添加时追加到现有地区定义之后。
+                      body += new_object
+              return text[:match.start('body')] + body + text[match.end('body'):]
+
+          def get_block(text, key, path):
+              m = re.search(r'(?m)^' + re.escape(key) + r':[ \t]*(?:\r?\n|$)', text)
+              if not m:
+                  raise ValueError(f'{path}: 未找到顶层 {key}:')
+              tail = text[m.end():]
+              next_root = re.search(r'(?m)^[A-Za-z_][A-Za-z0-9_.-]*:[ \t]*(?:[^\r\n]*)', tail)
+              end = m.end() + next_root.start() if next_root else len(text)
+              return m.end(), end
+
+
+          def insert_filters(text, path):
+              # 上游的 YAML 格式化器可能把以下写法：
+              #   DE_filter: &DE_filter { filter: ... }
+              # 格式化为多行：
+              #   DE_filter:
+              #     &DE_filter { filter: ... }
+              # 因此绝不可只替换 DE_filter: 所在的首行；必须替换完整的 YAML 块。
+              hk = re.search(r'(?m)^(?P<indent>[ \t]*)HK_filter:[ \t]*', text)
+              low = re.search(r'(?m)^(?P<indent>[ \t]*)low_filter:[ \t]*', text)
+              if not hk or not low or low.start() <= hk.start() or hk.group('indent') != low.group('indent'):
+                  raise ValueError(f'{path}: HK_filter/low_filter 结构与预期不符，拒绝修改')
+              indent = hk.group('indent')
+              newline = '\r\n' if '\r\n' in text else '\n'
+
+              def sibling_end(start):
+                  # 寻找相同缩进的下一个 YAML 键；嵌套 filter: 等子键不计入。
+                  following = text.find(newline, start)
+                  if following < 0:
+                      return len(text)
+                  following += len(newline)
+                  sibling = re.search(r'(?m)^' + re.escape(indent) + r'[A-Za-z_][A-Za-z0-9_.-]*:[ \t]*', text[following:])
+                  return following + sibling.start() if sibling else len(text)
+
+              for r in selected:
+                  key = r['code'] + '_filter'
+                  # 使用块映射而非一行 flow-map，规避格式化工具拆行所导致的孤立锚点。
+                  block = newline.join([
+                      f'{indent}{key}: &{key}',
+                      f"{indent}  filter: '(?i)({r['pattern']})'",
+                      f"{indent}  exclude-filter: '(?i)({INFO_KEYWORDS})'",
+                  ]) + newline
+                  existing = re.search(r'(?m)^' + re.escape(indent) + re.escape(key) + r':[ \t]*', text)
+                  if existing:
+                      end = sibling_end(existing.start())
+                      previous = text[existing.start():end]
+                      if f'&{key}' not in previous:
+                          raise ValueError(f'{path}: {key} 已存在但不含预期锚点，拒绝覆盖')
+                      # 语义相同时保留 Prettier 格式化后的文本，避免定时任务每次都产生提交。
+                      desired_filter = f"filter: '(?i)({r['pattern']})'"
+                      desired_exclude = f"exclude-filter: '(?i)({INFO_KEYWORDS})'"
+                      if desired_filter in previous and desired_exclude in previous:
+                          continue
+                      # 只在规则需要纠正时，完整替换旧的地区块。
+                      text = text[:existing.start()] + block + text[end:]
+                  else:
+                      target = re.search(r'(?m)^' + re.escape(indent) + r'low_filter:[ \t]*', text)
+                      if not target:
+                          raise ValueError(f'{path}: 缺少 low_filter 插入点')
+                      text = text[:target.start()] + block + text[target.start():]
+              return text
+
+          def insert_proxy_groups(text, path):
+              start, end = get_block(text, 'proxy-groups', path)
+              block = text[start:end]
+              m = re.search(r'''(?m)^(?P<indent>[ \t]*)-\s+name:[ \t]*['"]?香港['"]?\s*$''', block)
+              if not m:
+                  raise ValueError(f'{path}: proxy-groups 缺少香港分组模板')
+              indent = m.group('indent')
+              newline = '\r\n' if '\r\n' in text else '\n'
+              group_names = set(re.findall(r'''(?m)^[ \t]*-\s+name:[ \t]*["']?([^"'\r\n]+?)["']?[ \t]*$''', block))
+              # 若上一行正则存在尾引号吞噬问题，使用准确的独立查找。
+              missing = []
+              for r in selected:
+                  for name in (r['name'], r['name'] + '-自动选择'):
+                      if not re.search(r'''(?m)^[ \t]*-\s+name:[ \t]*["']?''' + re.escape(name) + r'''["']?[ \t]*$''', block):
+                          missing.append((r, name))
+              if not missing:
+                  return text
+              # 地区组插入在低倍率节点前面，避免打乱其他类型组。
+              anchor = re.search(r'''(?m)^[ \t]*-\s+name:[ \t]*["']?低倍率节点["']?[ \t]*$''', block)
+              if not anchor:
+                  anchor = re.search(r'''(?m)^[ \t]*-\s+name:[ \t]*["']?其他节点["']?[ \t]*$''', block)
+              if not anchor:
+                  raise ValueError(f'{path}: 找不到地区组结束位置（低倍率节点/其他节点）')
+              insert_pos = start + anchor.start()
+              lines = []
+              for r, name in missing:
+                  if name == r['name']:
+                      lines.extend([
+                          f"{indent}- name: '{r['name']}'",
+                          f'{indent}  <<: [*group_common_select, *{r["code"]}_filter]',
+                          f'{indent}  include-all: true',
+                          f"{indent}  proxies: ['{r['name']}-自动选择']",
+                          f"{indent}  icon: '{r['icon']}'",
+                      ])
+                  else:
+                      lines.extend([
+                          f"{indent}- name: '{r['name']}-自动选择'",
+                          f'{indent}  <<: [*group_common_auto, *{r["code"]}_filter]',
+                      ])
+              return text[:insert_pos] + newline.join(lines) + newline + text[insert_pos:]
+
+
+          def update_region_group_icons(text, path):
+              start, end = get_block(text, 'proxy-groups', path)
+              block = text[start:end]
+              newline = '\r\n' if '\r\n' in text else '\n'
+              for r in selected:
+                  item = re.search(r'''(?m)^(?P<indent>[ \t]*)-\s+name:[ \t]*['"]?''' + re.escape(r['name']) + r'''['"]?[ \t]*$''', block)
+                  if not item:
+                      raise ValueError(f'{path}: 没有地区组 {r["name"]}，无法补充图标')
+                  next_item = re.search(r'(?m)^' + re.escape(item.group('indent')) + r'-\s+name:', block[item.end():])
+                  stop = item.end() + next_item.start() if next_item else len(block)
+                  section = block[item.start():stop]
+                  if r['icon'] in section:
+                      continue
+                  icon_line = f"{item.group('indent')}  icon: '{r['icon']}'"
+                  icon = re.search(r'(?m)^[ \t]*icon:[ \t]*[^\r\n]*', section)
+                  if icon:
+                      section = section[:icon.start()] + icon_line + section[icon.end():]
+                  else:
+                      section = section.rstrip('\r\n') + newline + icon_line + newline
+                  block = block[:item.start()] + section + block[stop:]
+              return text[:start] + block + text[end:]
+
+          def insert_to_region_lists(text, path):
+              # 向所有以“台湾”作为一项的代理组列表添加新的地区引用。
+              # 相比直接替换全文，此处限定“必须有后续 ]”，且不会重复添加已经存在的国家。
+              pattern = re.compile(r'''(['"])台湾\1\s*,''')
+              matches = list(pattern.finditer(text))
+              if not matches:
+                  raise ValueError(f'{path}: 未找到台湾地区列表入口，无法更新默认/通用代理选择列表')
+              newline = '\r\n' if '\r\n' in text else '\n'
+              replaced = 0
+              for m in reversed(matches):
+                  close = text.find(']', m.end())
+                  if close < 0 or close - m.end() > 1600:
+                      continue
+                  after = text[m.end():close]
+                  missing = [r['name'] for r in selected if not re.search(r'''['"]''' + re.escape(r['name']) + r'''['"]''', after)]
+                  if not missing:
+                      continue
+                  line_start = text.rfind('\n', 0, m.start()) + 1
+                  before_on_line = text[line_start:m.start()]
+                  is_standalone = not before_on_line.strip()
+                  if is_standalone and text[m.end():].lstrip(' \t').startswith(newline):
+                      line_end = text.find(newline, m.end()) + len(newline)
+                      insertion = ''.join(f"{before_on_line}'{x}',{newline}" for x in missing)
+                      text = text[:line_end] + insertion + text[line_end:]
+                  else:
+                      insertion = ' ' + ', '.join(f"'{x}'" for x in missing) + ','
+                      text = text[:m.end()] + insertion + text[m.end():]
+                  replaced += 1
+              if not replaced and selected and not any(re.search(r'''['"]''' + re.escape(r['name']) + r'''['"]''', text) for r in selected):
+                  raise ValueError(f'{path}: 未能更新国家地区列表')
+              return text
+
+
+          def extend_other_exclude_filter(text, path):
+              # 修复旧版遗留的 GB/UK 等地区码边界正则，避免 1000GB 被误识别。
+              anchor = re.search(r'(?m)^(?P<indent>[ \t]*)exclude_filter:[ \t]*', text)
+              if not anchor:
+                  raise ValueError(f'{path}: 未找到 exclude_filter 锚点')
+              following = text.find('\n', anchor.end())
+              if following < 0:
+                  following = len(text)
+              else:
+                  following += 1
+              indent = anchor.group('indent')
+              next_key = re.search(r'(?m)^' + re.escape(indent) + r'[A-Za-z_][A-Za-z0-9_.-]*:[ \t]*', text[following:])
+              end = following + next_key.start() if next_key else len(text)
+              block = text[anchor.start():end]
+              m = re.search(r"""exclude-filter:[ \t]*(['"])(?P<expr>\(\?i\)\([^'"\r\n]+\))\1""", block)
+              if not m:
+                  raise ValueError(f'{path}: exclude_filter 中缺少可识别的 (?i)(...) 排除表达式')
+              expr = m.group('expr')
+              for r in selected:
+                  code = r['code']
+                  more = next((item[3] for item in REGION_DATA if item[1] == code), '')
+                  old = f'(?<![A-Za-z])(?:{code}|{more})(?![A-Za-z])'
+                  new = f'(?<![A-Za-z0-9])(?:{code}|{more})(?![A-Za-z0-9])'
+                  expr = expr.replace(old, new)
+              to_add = [r['pattern'] for r in selected if r['flag'] not in expr]
+              if to_add:
+                  expr = expr[:-1] + '|' + '|'.join(to_add) + ')'
+              begin = anchor.start() + m.start('expr')
+              finish = anchor.start() + m.end('expr')
+              return text[:begin] + expr + text[finish:]
+
+          def apply_yaml_regions(text, path):
+              text = insert_filters(text, path)
+              text = insert_proxy_groups(text, path)
+              text = update_region_group_icons(text, path)
+              text = insert_to_region_lists(text, path)
+              text = extend_other_exclude_filter(text, path)
+              return text
+
+          roots = (Path('Script'), Path('Config'))
+          files = sorted(path for root in roots if root.is_dir()
+                         for path in root.rglob('*') if path.is_file() and path.suffix.lower() in {'.js', '.yaml', '.yml'})
+          if not files:
+              raise SystemExit('Script / Config 目录中未找到 JS/YAML 文件')
+          for path in files:
+              before = path.read_text(encoding='utf-8')
+              try:
+                  if path.suffix.lower() == '.js':
+                      after = apply_js_regions(apply_direct_js(before, path), path)
+                  else:
+                      after = apply_yaml_regions(apply_direct_yaml(before, path), path)
+              except ValueError as e:
+                  raise SystemExit(str(e)) from e
+              if after != before:
+                  path.write_text(after, encoding='utf-8', newline='')
+              print(f'{path}: {"已更新" if after != before else "无需修改"}')
+          print('本次处理地区: ' + ', '.join(f'{r["flag"]}{r["name"]}' for r in selected))
           PY
 
-      - name: Verify JavaScript syntax and whitespace
+      - name: Verify JavaScript syntax, YAML structure and whitespace
         shell: bash
         run: |
           set -euo pipefail
           find Script Config -type f -name '*.js' -print0 | xargs -0 -r -n 1 node --check
+          python3 -m venv "$RUNNER_TEMP/myclash-verify"
+          "$RUNNER_TEMP/myclash-verify/bin/pip" -q install 'PyYAML==6.0.3'
+          "$RUNNER_TEMP/myclash-verify/bin/python" - <<'PY'
+          from pathlib import Path
+          import yaml
+          files = sorted(p for root in ('Script', 'Config') for p in Path(root).rglob('*')
+                         if p.is_file() and p.suffix.lower() in ('.yaml', '.yml'))
+          for path in files:
+              try:
+                  data = yaml.safe_load(path.read_text(encoding='utf-8'))
+              except yaml.YAMLError as exc:
+                  raise SystemExit(f'生成的 YAML 无法解析: {path}: {exc}') from exc
+              if not isinstance(data, dict):
+                  raise SystemExit(f'{path}: 配置的根节点必须是映射')
+              groups = data.get('proxy-groups')
+              if not isinstance(groups, list):
+                  raise SystemExit(f'{path}: 缺少 proxy-groups 列表')
+              names = [g['name'] for g in groups if isinstance(g, dict) and 'name' in g]
+              if len(names) != len(set(names)):
+                  raise SystemExit(f'{path}: 策略组存在重名')
+              for group in groups:
+                  if not isinstance(group, dict):
+                      raise SystemExit(f'{path}: proxy-groups 项目不是映射')
+                  for name in group.get('proxies', []):
+                      if isinstance(name, str) and (name.endswith('-自动选择') or name in names):
+                          if name not in names:
+                              raise SystemExit(f'{path}: 引用了不存在的策略组: {name}')
+              rules = data.get('rules')
+              if not isinstance(rules, list):
+                  raise SystemExit(f'{path}: 缺少 rules 列表')
+              for rule in ('DOMAIN-SUFFIX,yuchsh.top,DIRECT', 'DOMAIN,prts.maa.plus,DIRECT'):
+                  if rules.count(rule) != 1:
+                      raise SystemExit(f'{path}: DIRECT 规则必须且只出现一次: {rule}')
+              print(f'{path}: YAML 解析、策略组引用和 DIRECT 规则检查通过')
+          PY
           git diff --check
 
       - name: Commit and push if changed
@@ -120,7 +482,7 @@ jobs:
           set -euo pipefail
           git add -A -- Script Config
           if ! git diff --cached --quiet; then
-            git commit -m 'chore: apply personal DIRECT rules to JS and YAML'
+            git commit -m 'chore: keep DIRECT rules and extra regions synced'
           fi
           git push origin HEAD:main
 
@@ -131,10 +493,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           if [ "$(git rev-parse HEAD)" != "$BEFORE_SHA" ]; then
-            gh workflow run format_and_test.yaml
-            \
-              --repo "$GITHUB_REPOSITORY" \
-              --ref main
+            # 显式指定当前 fork，避免 gh 根据 upstream remote 误选上游仓库
+            gh workflow run format_and_test.yaml --repo "$GITHUB_REPOSITORY" --ref main
           else
             echo '没有新提交，跳过 format_and_test'
           fi
