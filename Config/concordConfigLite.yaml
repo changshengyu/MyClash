@@ -656,6 +656,7 @@ proxy-groups:
 # --- 路由规则 (Rules) ---
 
 rules:
+  - DOMAIN-SUFFIX,lumina.lumina00001.com,DIRECT
   - DOMAIN-SUFFIX,yuchsh.top,DIRECT
   - DOMAIN,prts.maa.plus,DIRECT
   # 广告拦截

@@ -64,6 +64,7 @@ const ruleOptionsEnable = {
 
 // 定义前置规则
 const prefixRules = [
+  'DOMAIN-SUFFIX,lumina.lumina00001.com,DIRECT',
   'DOMAIN-SUFFIX,yuchsh.top,DIRECT',
   'DOMAIN,prts.maa.plus,DIRECT',
   // 私有网络直连
