@@ -377,6 +377,7 @@ function runIntegrationTests(h, api, fx, loadScript, scriptFile) {
     withOptions(api, { 生成地区自动选择组: false }, () => {
       const out = api.main(fx.minimalSubscription());
       h.assert(!out['proxy-groups'].some((g) => g.name.endsWith('-自动选择')), '不应有自动选择组');
+      h.assert(!out['proxy-groups'].some((g) => g.name.endsWith('-故障转移')), '不应有地区故障转移组');
       h.assert(groupByName(out['proxy-groups'], '香港'), '香港组仍应存在');
     }),
   );
@@ -388,6 +389,23 @@ function runIntegrationTests(h, api, fx, loadScript, scriptFile) {
     h.assertEqual(names[idx + 1], '香港-自动选择', '自动选择组应紧跟其地区组之后');
     h.assert(!names.slice(0, idx).includes('香港-自动选择'), '自动选择组不应排在地区组之前');
     h.assert(groupByName(out['proxy-groups'], '香港').proxies.includes('香港-自动选择'), '地区组应包含自动选择组');
+  });
+  h.test('内置和扩展地区的故障转移按原节点顺序选择', () => {
+    const sub = fx.minimalSubscription();
+    sub.proxies.push(...['香港 Z', '德国 Z', '德国 A'].map((name) => ({ ...sub.proxies[0], name })));
+    const groups = api.main(sub)['proxy-groups'];
+    for (const [region, nodes] of [
+      ['香港', ['🇭🇰 香港 A', '🇭🇰 香港 Z']],
+      ['德国', ['🇩🇪 德国 Z', '🇩🇪 德国 A']],
+    ]) {
+      const auto = groupByName(groups, `${region}-自动选择`);
+      const fallback = groupByName(groups, `${region}-故障转移`);
+      h.assertEqual(auto.type, 'url-test');
+      h.assertEqual(fallback.type, 'fallback');
+      h.assertDeep(fallback.proxies, nodes);
+      h.assertDeep(auto.proxies, nodes);
+      h.assertDeep(groupByName(groups, region).proxies, [...nodes, auto.name, fallback.name]);
+    }
   });
   h.test('隐藏地区手动选择组=true → 地区组 hidden', () =>
     withOptions(api, { 隐藏地区手动选择组: true }, () => {

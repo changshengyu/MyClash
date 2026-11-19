@@ -218,6 +218,28 @@ jobs:
                       body += new_object
               return text[:match.start('body')] + body + text[match.end('body'):]
 
+          def apply_js_fallback(text, path):
+              # 只修改 createRegionGroup 内开启自动选择时的返回值，保留上游其余逻辑。
+              start = text.index('function createRegionGroup(')
+              end = text.index('\n}', start)
+              body = text[start:end]
+              original = '    return [\n'
+              updated = '    const groups = [\n'
+              finish = '    ];\n'
+              fallback = """    if (regionDefinitions.some((region) => region.name === name)) {
+                const fallbackName = `${name}-故障转移`;
+                groups[0].proxies.push(fallbackName);
+                groups.push({ ...urlTestBaseOption, type: 'fallback', name: fallbackName, proxies });
+              }
+              return groups;
+          """
+              if fallback in body and updated in body:
+                  return text
+              if body.count(original) != 1 or body.count(finish) != 1 or '${name}-故障转移' in body:
+                  raise ValueError(f'{path}: 地区策略组生成逻辑已变化，无法添加故障转移')
+              body = body.replace(original, updated).replace(finish, finish + fallback)
+              return text[:start] + body + text[end:]
+
           def get_block(text, key, path):
               m = re.search(r'(?m)^' + re.escape(key) + r':[ \t]*(?:\r?\n|$)', text)
               if not m:
@@ -407,9 +429,32 @@ jobs:
               finish = anchor.start() + m.end('expr')
               return text[:begin] + expr + text[finish:]
 
+          def add_region_fallbacks(text, path):
+              start, end = get_block(text, 'proxy-groups', path)
+              block = text[start:end]
+              # 国家/地区使用大写地区码锚点；倍率、家宽、其他节点使用独立的小写锚点。
+              auto_group = re.compile(
+                  r"(?m)^(?P<indent> *)- name: '(?P<region>[^'\n]+)-自动选择'\n"
+                  r"(?P<merge> +<<: \[\*group_common_auto, \*[A-Z]{2}_filter\])$"
+              )
+              matches = list(auto_group.finditer(block))
+              if not matches:
+                  raise ValueError(f'{path}: 缺少地区自动选择组')
+              for m in reversed(matches):
+                  name = m['region']
+                  fallback = f'{name}-故障转移'
+                  if f"- name: '{fallback}'" not in block:
+                      group = f"\n{m['indent']}- name: '{fallback}'\n{m['merge']}\n{m['indent']}  type: fallback"
+                      block = block[:m.end()] + group + block[m.end():]
+                  old = f"proxies: ['{name}-自动选择']"
+                  new = f"proxies: ['{name}-自动选择', '{fallback}']"
+                  block = block.replace(old, new)
+              return text[:start] + block + text[end:]
+
           def apply_yaml_regions(text, path):
               text = insert_filters(text, path)
               text = insert_proxy_groups(text, path)
+              text = add_region_fallbacks(text, path)
               text = update_region_group_icons(text, path)
               text = insert_to_region_lists(text, path)
               text = extend_other_exclude_filter(text, path)
@@ -425,6 +470,7 @@ jobs:
               try:
                   if path.suffix.lower() == '.js':
                       after = apply_js_regions(apply_direct_js(before, path), path)
+                      after = apply_js_fallback(after, path)
                   else:
                       after = apply_yaml_regions(apply_direct_yaml(before, path), path)
               except ValueError as e:
@@ -444,6 +490,7 @@ jobs:
           "$RUNNER_TEMP/myclash-verify/bin/pip" -q install 'PyYAML==6.0.3'
           "$RUNNER_TEMP/myclash-verify/bin/python" - <<'PY'
           from pathlib import Path
+          import re
           import yaml
           files = sorted(p for root in ('Script', 'Config') for p in Path(root).rglob('*')
                          if p.is_file() and p.suffix.lower() in ('.yaml', '.yml'))
@@ -464,9 +511,23 @@ jobs:
                   if not isinstance(group, dict):
                       raise SystemExit(f'{path}: proxy-groups 项目不是映射')
                   for name in group.get('proxies', []):
-                      if isinstance(name, str) and (name.endswith('-自动选择') or name in names):
+                      if isinstance(name, str) and (name.endswith(('-自动选择', '-故障转移')) or name in names):
                           if name not in names:
                               raise SystemExit(f'{path}: 引用了不存在的策略组: {name}')
+              by_name = {g['name']: g for g in groups}
+              region_filters = [v['filter'] for k, v in data.items() if re.fullmatch(r'[A-Z]{2}_filter', k)]
+              for region_filter in region_filters:
+                  parents = [g for g in groups if g.get('type') == 'select' and g.get('filter') == region_filter]
+                  if len(parents) != 1:
+                      raise SystemExit(f'{path}: 每个地区应有一个手动组: {region_filter}')
+                  parent = parents[0]
+                  for suffix, kind in (('自动选择', 'url-test'), ('故障转移', 'fallback')):
+                      name = f"{parent['name']}-{suffix}"
+                      child = by_name.get(name, {})
+                      if (parent['proxies'].count(name) != 1 or child.get('type') != kind
+                              or not child.get('include-all') or child.get('filter') != region_filter
+                              or child.get('exclude-filter') != parent.get('exclude-filter')):
+                          raise SystemExit(f'{path}: 地区子组类型、引用或节点筛选错误: {name}')
               rules = data.get('rules')
               if not isinstance(rules, list):
                   raise SystemExit(f'{path}: 缺少 rules 列表')
