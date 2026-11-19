@@ -715,155 +715,218 @@ proxy-groups:
   - name: '香港'
     <<: [*group_common_select, *HK_filter]
     include-all: true
-    proxies: ['香港-自动选择']
+    proxies: ['香港-自动选择', '香港-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/HongKong.svg'
   - name: '香港-自动选择'
     <<: [*group_common_auto, *HK_filter]
+  - name: '香港-故障转移'
+    <<: [*group_common_auto, *HK_filter]
+    type: fallback
 
   - name: '日本'
     <<: [*group_common_select, *JP_filter]
     include-all: true
-    proxies: ['日本-自动选择']
+    proxies: ['日本-自动选择', '日本-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Japan.svg'
   - name: '日本-自动选择'
     <<: [*group_common_auto, *JP_filter]
+  - name: '日本-故障转移'
+    <<: [*group_common_auto, *JP_filter]
+    type: fallback
 
   - name: '美国'
     <<: [*group_common_select, *US_filter]
     include-all: true
-    proxies: ['美国-自动选择']
+    proxies: ['美国-自动选择', '美国-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/America.svg'
   - name: '美国-自动选择'
     <<: [*group_common_auto, *US_filter]
+  - name: '美国-故障转移'
+    <<: [*group_common_auto, *US_filter]
+    type: fallback
 
   - name: '新加坡'
     <<: [*group_common_select, *SG_filter]
     include-all: true
-    proxies: ['新加坡-自动选择']
+    proxies: ['新加坡-自动选择', '新加坡-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Singapore.svg'
   - name: '新加坡-自动选择'
     <<: [*group_common_auto, *SG_filter]
+  - name: '新加坡-故障转移'
+    <<: [*group_common_auto, *SG_filter]
+    type: fallback
 
   - name: '台湾'
     <<: [*group_common_select, *TW_filter]
     include-all: true
-    proxies: ['台湾-自动选择']
+    proxies: ['台湾-自动选择', '台湾-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Taiwan.svg'
   - name: '台湾-自动选择'
     <<: [*group_common_auto, *TW_filter]
+  - name: '台湾-故障转移'
+    <<: [*group_common_auto, *TW_filter]
+    type: fallback
 
   - name: '德国'
     <<: [*group_common_select, *DE_filter]
     include-all: true
-    proxies: ['德国-自动选择']
+    proxies: ['德国-自动选择', '德国-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e9-1f1ea.svg'
   - name: '德国-自动选择'
     <<: [*group_common_auto, *DE_filter]
+  - name: '德国-故障转移'
+    <<: [*group_common_auto, *DE_filter]
+    type: fallback
   - name: '荷兰'
     <<: [*group_common_select, *NL_filter]
     include-all: true
-    proxies: ['荷兰-自动选择']
+    proxies: ['荷兰-自动选择', '荷兰-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f3-1f1f1.svg'
   - name: '荷兰-自动选择'
     <<: [*group_common_auto, *NL_filter]
+  - name: '荷兰-故障转移'
+    <<: [*group_common_auto, *NL_filter]
+    type: fallback
   - name: '英国'
     <<: [*group_common_select, *GB_filter]
     include-all: true
-    proxies: ['英国-自动选择']
+    proxies: ['英国-自动选择', '英国-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ec-1f1e7.svg'
   - name: '英国-自动选择'
     <<: [*group_common_auto, *GB_filter]
+  - name: '英国-故障转移'
+    <<: [*group_common_auto, *GB_filter]
+    type: fallback
   - name: '法国'
     <<: [*group_common_select, *FR_filter]
     include-all: true
-    proxies: ['法国-自动选择']
+    proxies: ['法国-自动选择', '法国-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1f7.svg'
   - name: '法国-自动选择'
     <<: [*group_common_auto, *FR_filter]
+  - name: '法国-故障转移'
+    <<: [*group_common_auto, *FR_filter]
+    type: fallback
   - name: '韩国'
     <<: [*group_common_select, *KR_filter]
     include-all: true
-    proxies: ['韩国-自动选择']
+    proxies: ['韩国-自动选择', '韩国-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f0-1f1f7.svg'
   - name: '韩国-自动选择'
     <<: [*group_common_auto, *KR_filter]
+  - name: '韩国-故障转移'
+    <<: [*group_common_auto, *KR_filter]
+    type: fallback
   - name: '加拿大'
     <<: [*group_common_select, *CA_filter]
     include-all: true
-    proxies: ['加拿大-自动选择']
+    proxies: ['加拿大-自动选择', '加拿大-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e8-1f1e6.svg'
   - name: '加拿大-自动选择'
     <<: [*group_common_auto, *CA_filter]
+  - name: '加拿大-故障转移'
+    <<: [*group_common_auto, *CA_filter]
+    type: fallback
   - name: '澳大利亚'
     <<: [*group_common_select, *AU_filter]
     include-all: true
-    proxies: ['澳大利亚-自动选择']
+    proxies: ['澳大利亚-自动选择', '澳大利亚-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e6-1f1fa.svg'
   - name: '澳大利亚-自动选择'
     <<: [*group_common_auto, *AU_filter]
+  - name: '澳大利亚-故障转移'
+    <<: [*group_common_auto, *AU_filter]
+    type: fallback
   - name: '瑞士'
     <<: [*group_common_select, *CH_filter]
     include-all: true
-    proxies: ['瑞士-自动选择']
+    proxies: ['瑞士-自动选择', '瑞士-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e8-1f1ed.svg'
   - name: '瑞士-自动选择'
     <<: [*group_common_auto, *CH_filter]
+  - name: '瑞士-故障转移'
+    <<: [*group_common_auto, *CH_filter]
+    type: fallback
   - name: '瑞典'
     <<: [*group_common_select, *SE_filter]
     include-all: true
-    proxies: ['瑞典-自动选择']
+    proxies: ['瑞典-自动选择', '瑞典-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f8-1f1ea.svg'
   - name: '瑞典-自动选择'
     <<: [*group_common_auto, *SE_filter]
+  - name: '瑞典-故障转移'
+    <<: [*group_common_auto, *SE_filter]
+    type: fallback
   - name: '芬兰'
     <<: [*group_common_select, *FI_filter]
     include-all: true
-    proxies: ['芬兰-自动选择']
+    proxies: ['芬兰-自动选择', '芬兰-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1ee.svg'
   - name: '芬兰-自动选择'
     <<: [*group_common_auto, *FI_filter]
+  - name: '芬兰-故障转移'
+    <<: [*group_common_auto, *FI_filter]
+    type: fallback
   - name: '波兰'
     <<: [*group_common_select, *PL_filter]
     include-all: true
-    proxies: ['波兰-自动选择']
+    proxies: ['波兰-自动选择', '波兰-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f5-1f1f1.svg'
   - name: '波兰-自动选择'
     <<: [*group_common_auto, *PL_filter]
+  - name: '波兰-故障转移'
+    <<: [*group_common_auto, *PL_filter]
+    type: fallback
   - name: '意大利'
     <<: [*group_common_select, *IT_filter]
     include-all: true
-    proxies: ['意大利-自动选择']
+    proxies: ['意大利-自动选择', '意大利-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ee-1f1f9.svg'
   - name: '意大利-自动选择'
     <<: [*group_common_auto, *IT_filter]
+  - name: '意大利-故障转移'
+    <<: [*group_common_auto, *IT_filter]
+    type: fallback
   - name: '西班牙'
     <<: [*group_common_select, *ES_filter]
     include-all: true
-    proxies: ['西班牙-自动选择']
+    proxies: ['西班牙-自动选择', '西班牙-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ea-1f1f8.svg'
   - name: '西班牙-自动选择'
     <<: [*group_common_auto, *ES_filter]
+  - name: '西班牙-故障转移'
+    <<: [*group_common_auto, *ES_filter]
+    type: fallback
   - name: '印度'
     <<: [*group_common_select, *IN_filter]
     include-all: true
-    proxies: ['印度-自动选择']
+    proxies: ['印度-自动选择', '印度-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ee-1f1f3.svg'
   - name: '印度-自动选择'
     <<: [*group_common_auto, *IN_filter]
+  - name: '印度-故障转移'
+    <<: [*group_common_auto, *IN_filter]
+    type: fallback
   - name: '挪威'
     <<: [*group_common_select, *NO_filter]
     include-all: true
-    proxies: ['挪威-自动选择']
+    proxies: ['挪威-自动选择', '挪威-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f3-1f1f4.svg'
   - name: '挪威-自动选择'
     <<: [*group_common_auto, *NO_filter]
+  - name: '挪威-故障转移'
+    <<: [*group_common_auto, *NO_filter]
+    type: fallback
   - name: '爱尔兰'
     <<: [*group_common_select, *IE_filter]
     include-all: true
-    proxies: ['爱尔兰-自动选择']
+    proxies: ['爱尔兰-自动选择', '爱尔兰-故障转移']
     icon: 'https://fastly.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ee-1f1ea.svg'
   - name: '爱尔兰-自动选择'
     <<: [*group_common_auto, *IE_filter]
+  - name: '爱尔兰-故障转移'
+    <<: [*group_common_auto, *IE_filter]
+    type: fallback
   - name: '低倍率节点'
     <<: [*group_common_select, *low_filter]
     include-all: true

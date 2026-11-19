@@ -1032,7 +1032,7 @@ function createRegionGroup(name, icon, proxies) {
 
   if (generateRegionAutoSelectEnabled) {
     const urlTestName = `${name}-自动选择`;
-    return [
+    const groups = [
       {
         ...selectBaseOption,
         name,
@@ -1046,6 +1046,12 @@ function createRegionGroup(name, icon, proxies) {
         proxies,
       },
     ];
+    if (regionDefinitions.some((region) => region.name === name)) {
+      const fallbackName = `${name}-故障转移`;
+      groups[0].proxies.push(fallbackName);
+      groups.push({ ...urlTestBaseOption, type: 'fallback', name: fallbackName, proxies });
+    }
+    return groups;
   }
   return [
     {
