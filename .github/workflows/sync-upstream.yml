@@ -143,6 +143,7 @@ jobs:
           REQUIRED_DIRECT = (
               'DOMAIN-SUFFIX,yuchsh.top,DIRECT',
               'DOMAIN,prts.maa.plus,DIRECT',
+              'DOMAIN-SUFFIX,lumina.lumina00001.com,DIRECT',
           )
 
 
